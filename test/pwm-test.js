@@ -13,7 +13,7 @@ if(name == 'Artik 520') {
 } else if(name == 'Artik 710') {
 	console.log('Running PWM test on Artik 710');
 	const a7 = require('../src/platform/artik710');
-	var pwm = artik.pwm(a7.ARTIK_A710_PWM.PWMIO.XPWMIO1, "pwm-test", 400000, a7.ARTIK_A710_PWM.POLR.NORMAL, 200000);
+	var pwm = artik.pwm(a7.ARTIK_A710_PWM.PWMIO.XPWMIO0, "pwm-test", 400000, a7.ARTIK_A710_PWM.POLR.NORMAL, 200000);
 }
 
 var dc = 150000;
