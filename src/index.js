@@ -1,5 +1,6 @@
 /* Platform exports */
 module.exports.artik520 = require('./platform/artik520');
+module.exports.artik710 = require('./platform/artik710');
 module.exports.artik1020 = require('./platform/artik1020');
 
 /* Addon exports */
@@ -12,7 +13,6 @@ module.exports.media = artik.media;
 module.exports.network = artik.network;
 module.exports.pwm = artik.pwm;
 module.exports.sensor = artik.sensor;
-module.exports.serial = artik.serial;
 module.exports.spi = artik.spi;
 module.exports.time = artik.time;
 
