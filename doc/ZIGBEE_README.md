@@ -1,182 +1,385 @@
-# Module Zigbee
-   > This README permits to introduce each API functions of the module Zigbee.
+#ZigBee API
 
-## 1. Initialize & clean an usage with the module  Zigbee
-   * Include the headers  
-   First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.  
-   **_ex\._**:  
+##Device types
 
-```javascript
-	const artik = require('../lib/artik-sdk'); // Include dependencies of the Artik SDK.  
-    const Zigbee = require('../src/zigbee'); // Instanciate the main module object.  
-	const name = artik.get_platform_name(); // Get the platform name.
+| Type                 | Value |
+|:---------------------|:-----:|
+| On-Off Switch        | 0     |
+| Level Control Switch | 1     |
+| On-Off Light         | 2     |
+| Dimmable Light       | 3     |
 
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
-        }
-		...
-```
- __NB__:  
-   \- After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.  
-   \- Also be carefull due to the system of event emitter we need to construct the object from the javascript layer not the node.js addon C++.  
-   
-   * Instantiate the module  
-   From the main module we can call the module Zigbee constructor.  
-   **_ex\._**:  
+##initialize
 
 ```javascript
-	var zb = artik.Zigbee();
-		...
+initialize(Number[] devices)
 ```
 
-   * Function : Initialize  
-   Instantiate and initialize the zigbee module.   
-   **_ex\._**:  
+**Description**
+
+Initialize the ZigBee module with the list of device types it should expose.
+
+**Parameters**
+
+ - *Number[]*: array of device types among the ones defined under the 
+[Device types](#device-types) section.
+
+**Return value**
+
+None.
+
+**Example**
+
+See [full example](#full-example)
+
+##network_start
 
 ```javascript
-	zb.initialize(zb_device_type);
-		...
+String network_start()
 ```
- __NB__:  
-   The parameter serves to define wich zigbee devices are support by the module.  
-   
 
-## 2. Process with the Zigbee module
-   * Function : 'network_start'  
-   'network_start' resumes the network operation.  
-   **_ex\._**:  
+**Description**
+
+Start the ZigBee network module.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: Error code.
+
+**Example**
+
+See [full example](#full-example)
+
+##network_form
 
 ```javascript
-	console.log(zb.network_start());
-		...
+network_form()
 ```
 
-   * Function : 'network_form'  
-   'network_form' creates a new network as a coordinator.  
-   **_ex\._**:  
+**Description**
+
+Form a new ZigBee network for other devices to join using default 
+parameters.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+None.
+
+**Example**
+
+See [full example](#full-example)
+
+##network_form_manually
 
 ```javascript
-	zb.network_form();
-		...
+network_form_manually(Number[] parameters)
 ```
 
-   * Function : 'network_form_manually'  
-   'network_form_manually' permits to form a network as a coordinator.  
-   **_ex\._**:  
+**Description**
+
+Form a new ZigBee network for other devices to join using specific 
+parameters.
+
+**Parameters**
+
+ - *Number[]*: array of parameters, which must be passed in the order detailed
+below:
+
+| Index | Parameter |
+|:-----:|:----------|
+| 0     | Channel   |
+| 1     | TX Power  |
+| 2     | PAN ID    |
+
+**Return value**
+
+*String*: Error code.
+
+**Example**
 
 ```javascript
-	var channel = 25;  
-	var tx_power = zb.ZIGBEE_TX_POWER_8;  
-	var pan_id = 0x1234;  
-
-	var network =[channel, tx_power, pan_id];
-	console.log(zb.network_form_manually(network));
-		...
+var params = [ 14, 2, 1200 ];
+zigbee.network_form_manually(params);
 ```
 
-   * Function : 'network_permitjoin'  
-   'network_permitjoin' permits to join a network from another nodes.  
-   **_ex\._**:  
+##network_permitjoin
 
 ```javascript
-	zb.network_permitjoin(join_duration)
-		...
+String network_permitjoin(Number duration)
 ```
 
-   * Function : 'network_leave'  
-   'network_leave' leaves the zigbee network.  
-   **_ex\._**:  
+**Description**
+
+Allow other ZigBee devices to join the formed network for a limited duration.
+
+**Parameters**
+
+ - *Number*: duration in seconds for which remote ZigBee devices are allowed
+to join the network.
+
+**Return value**
+
+*String*: Error code.
+
+**Example**
+
+See [full example](#full-example)
+
+##network_leave
 
 ```javascript
-	console.log("network leave status : "+zb.network_leave());
-		...
+String network_leave()
 ```
 
-   * Function : 'network_join'  
-   'network_join' joins automatically an other existing network by an other coordinator.  
-   **_ex\._**:  
+**Description**
+
+Leave from the currently connected network.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: Error code.
+
+**Example**
+
+See [full example](#full-example)
+
+##network_join
 
 ```javascript
-	zb.network_join();
-		...
+network_join()
 ```
 
-   * Function : 'network_find'  
-   'network_find' list all joinable network for zigbee.  
-   **_ex\._**:  
+**Description**
+
+Join a network formed by another ZigBee device.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+None.
+
+**Example**
+
+See [full example](#full-example)
+
+##network_find
 
 ```javascript
-	zb.network_find();
-		...
+network_find()
 ```
 
-   * Function : 'network_request_my_network_status'  
-   'network_request_my_network_status' retrieves the status of the network use by zigbee.  
-   **_ex\._**:  
+**Description**
+
+Find networks formed by other ZigBee device.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+None.
+
+**Example**
+
+See [full example](#full-example)
+
+##network_request_my_network_status
 
 ```javascript
-	console.log("network request my network status : "+zb.network_request_my_network_status());
-		...
+String network_request_my_network_status()
 ```
 
-   * Function : 'device_request_my_node_type'  
-   'device_request_my_node_type' requests the device type.  
-   **_ex\._**:  
+**Description**
+
+Request current status of the network.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: Status or error code.
+
+**Example**
+
+See [full example](#full-example)
+
+##device_request_my_node_type
 
 ```javascript
-	console.log("device request my node type: " + zb.device_request_my_node_type());
-		...
+String device_request_my_node_type()
 ```
 
-   * Function : 'device_find_by_cluster'  
-   'device_find_by_cluster' finds an other device by a clustering (use ID and server/client filters).  
-   **_ex\._**:  
+**Description**
+
+Request current node type of the device.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: Status or error code.
+
+**Example**
+
+See [full example](#full-example)
+
+##device_find_by_cluster
 
 ```javascript
-	var data = zb.device_find_by_cluster(zb.ZCL_ON_OFF_CLUSTER_ID);
-	try {
-		var result =JSON.parse(data);
-		...
+String device_find_by_cluster(Number cluster_id)
 ```
 
-   * Function : 'onoff_command'  
-   'onoff_command' process the command on/off to the cluster client.  
-   **_ex\._**:  
+**Description**
+
+Returns the devices on the network that correspond to a cluster ID.
+
+**Parameters**
+
+ - *Number*: cluster ID to look up.
+
+**Return value**
+
+*String*: JSON formatted string containing the array of found devices.
+
+**Example**
+
+See [full example](#full-example)
+
+##onoff_command
 
 ```javascript
-	console.log('on_off send :' + zb.onoff_command(array, zb.ZIGBEE_ONOFF_TOGGLE));
-		...
+String onoff_command(Number[] endpoint, Number onoff)
 ```
 
-   * Function : 'onoff_get_value'  
-   'onoff_get_value' gets the state value of the cluster server.  
-   **_ex\._**:  
+**Description**
+
+Send an On/Off command to a remote device.
+
+**Parameters**
+
+ - *Number[]*: array of integers containing the IDs of the endpoint to target
+following the order detailed below:
+
+| Index | Parameter          |
+|:-----:|:-------------------|
+| 0     | Endpoint ID        |
+| 1     | Device ID          |
+| 2     | Server Cluster 0   |
+| 3     | Server Cluster 1   |
+| 4     | Server Cluster 2   |
+| 5     | Server Cluster 3   |
+| 6     | Server Cluster 4   |
+| 7     | Server Cluster 5   |
+| 8     | Client Cluster 0   |
+| 9     | Client Cluster 1   |
+| 10    | Client Cluster 2   |
+| 11    | Client Cluster 3   |
+| 12    | Client Cluster 4   |
+| 13    | Client Cluster 5   | 
+
+- *Number*: On/Off command to send, among the ones defined below:
+
+| Command | Value |
+|:--------|:-----:|
+| OFF     | 3220  |
+| ON      | 3221  |
+| TOGGLE  | 3222  |
+
+**Return value**
+
+*String*: Error code.
+
+**Example**
+
+See [full example](#full-example)
+
+##onoff_get_value
 
 ```javascript
-	zb.onoff_get_value(endpoint_id);
-		...
+Number onoff_get_value(Number endpoint_id)
 ```
 
-   * Function : 'on'    
-   'on' permits to store a callback associates to an event.  
-   **_ex\._**:  
+**Description**
+
+Get the current On/Off state of a remote endpoint.
+
+**Parameters**
+
+ - *Number*: endpoint ID of the remote device to query On/Off state from.
+
+**Return value**
+
+*Number*: current On/Off state of the endpoint, among the ones defined below:
+
+| State   | Value |
+|:--------|:-----:|
+| OFF     | 3220  |
+| ON      | 3221  |
+
+
+**Example**
+
+See [full example](#full-example)
+
+#Events
+
+##started
 
 ```javascript
-	zb.on('found', function(message) {
-        console.log("received: " + message);
-});
-
-		...
+zigbee.on('started', function())
 ```
 
-## 3. Full example
+**Description**
 
-   * See [the test file](/test/zigbee-test.js)
+Called after a the ZigBee module was properly loaded. No other functions
+from the ZigBee module should be called until this event has been fired.
+
+**Parameters**
+
+None.
+
+**Example**
+
+See [full example](#full-example)
+
+##event
+
+```javascript
+zigbee.on('event', function(String))
+```
+
+**Description**
+
+Called by the ZigBee module every time an event occurs. It passes a JSON formatted string containing information related to the event that occurred.
+
+**Parameters**
+
+ - *String*: JSON formatted string containing information about the event.
+
+**Example**
+
+See [full example](#full-example)
+
+#Full example
+
+   * See [zigbee-test.js](/test/zigbee-test.js)

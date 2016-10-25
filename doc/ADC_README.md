@@ -1,109 +1,211 @@
-# Module ADC
-  > This README permits to introduce each API functions of the module ADC.
+#ADC API
 
-## 1. Initialize & clean an usage with the module ADC
-  * Include the headers  
-    First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.   
-  **_ex\._**:  
+##Constructor
 
 ```javascript
-	const artik = require('../lib/artik-sdk'); // Instantiate the main module object for accessing to the Artik SDK.
-	const name = artik.get_platform_name(); // Get the platform name.
-
-	if (name == 'Artik 520') { // Check for a A520 board
-		const a5 = require('../src/platform/artik520'); // If 'yes', then instantiate the platform depedencies.
-	} else if (name == 'Artik 1020') { // Check for a A1020 board
-		const a10 = require('../src/platform/artik1020'); // If 'yes', then instantiate the platform depedencies.
-	} else if (name == 'Artik 71O') { // Check for a A710 board
-		const a7 = require('../src/platform/artik710'); // If 'yes', then instantiate the platform depedencies.
-	}
-		...
+var analog = new adc(Number pin, String name);
 ```
- __NB__:  
-   After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.    
-   
-   * Instantiate the module  
-   From the main module object we can call the module ADC constructor..  
-   **_ex\._**:  
+
+**Description**
+
+Create a new instance of the ADC tied to a specific analog pin with
+custom friendly name.
+
+**Parameters**
+
+ - *Number*: number of the analog input pin. This value is defined in the board-specific
+definition files.
+ - *String*: friendly name to attach to the analog input.
+
+**Return value**
+
+New instance.
+
+**Example**
 
 ```javascript
-	var adc = artik.adc(0, "adcjs-test"); // we use a board Artik 5
-		...
+var temperature = new adc(1, 'Temperature Sensor');
 ```
- __NB__:  
-   - The first parameter serves to indicate wich analog port should be use;  
-   - Rather than the second which it serves to name the module object.  
 
-   * Function : 'request'  
-   'request' permits to request the analog port reserved for the module.  
-   It will not allows to share it with another instance of module ADC otherwise the function will throw an exception.  
-   **_ex\._**:  
+##request
 
 ```javascript
-	   adc.request();
-		...
+Number request()
 ```
 
-   * Function : 'release'  
-   'release' releases the modules ressources.  
-   If it's not call the next 'request' call with the same analog port will fail.  
-   **_ex\._**:  
+**Description**
+
+Request the ADC analog pin tied to the ADC instance. If this one has
+already been requested by some other program, the function will return
+an error. When the calling program is no longer reading from the analog
+input, it should release it by calling the *release* function.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##release
 
 ```javascript
-	adc.release();
-		...
+Number release()
 ```
 
-## 2. Process with the ADC module
+**Description**
 
-   * Function : 'get_value'  
-   'get_value' reads the data sent to the analog port.  
-   **_ex\._**:  
+Release an ADC analog pin after being previously reserved by the *request*
+function.
+
+**Parameters**
+
+None
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##get_value
 
 ```javascript
-    console.log("Value : [%d]", adc.get_value());
-		...
+Number get_value()
 ```
 
-   * Function : 'get_pin_num'  
-   'get_pin_num' permits to retrieve the analog port number.  
-   **_ex\._**:  
+**Description**
+
+Read the analog value converted by the ADC on the analog pin.
+
+**Parameters**
+
+None
+
+**Return value**
+
+*Number*: analog value read by the ADC. If an error occurs during the
+conversion process, **-1** is returned instead.
+
+**Example**
+
+See [full example](#full-example)
+
+##get_pin_num
 
 ```javascript
-	console.log("Pin : A[%d]", adc.get_pin_num());
-		...
+Number get_pin_num();
 ```
 
-   * Function : 'get_name'  
-   'get_name' retrieves the friendly name.  
-   **_ex\._**:  
+**Description**
+
+Return the analog pin number of the ADC instance.
+
+**Parameters**
+
+None
+
+**Return value**
+
+*Number*: analog pin number
+
+**Example**
 
 ```javascript
-	console.log("[%s] : load", adc.get_name());
-		...
+console.log('Analog pin number: ' + temperature.get_pin_num());
 ```
 
-   * Function : 'set_pin_num'  
-   >'set_pin_num' changes the analog port number without re-enable the module (It should be done manualy).  
-   **_ex\._**:  
+##get_name
 
 ```javascript
-	adc.release(); // Close the pending module.
-
-	adc.set_pin_num(); // Change the port number.
-
-	adc.request(); // Finally request the new analog port.
-		...
+String get_name()
 ```
-   * Function : 'set_name'  
-   'set_name' permits to change the friendly name of the module.  
-   **_ex\._**:  
+
+**Description**
+
+Return the friendly name of the ADC instance.
+
+**Parameters**
+
+None
+
+**Return value**
+
+*String*: friendly name
+
+**Example**
 
 ```javascript
-	adc.set_name("new_name_adc_test");
-		...
+console.log('Analog pin name: ' + temperature.get_name());
 ```
-## 3. Full example
 
-   * See [the test file](/test/adc-test.js)
+##set_pin_num
+
+```javascript
+set_pin_num(Number pin)
+```
+
+**Description**
+
+Change the analog pin number of the ADC instance.
+
+**Parameters**
+
+ - *Number*: analog pin number to set
+
+**Return value**
+
+None
+
+**Example**
+
+```javascript
+temperature.set_pin_num(3);
+```
+
+##set_name
+
+```javascript
+set_name(String name)
+```
+
+**Description**
+
+Change the friendly name of the ADC instance.
+
+**Parameters**
+
+ - *String*: friendly name to set
+
+**Return value**
+
+None
+
+**Example**
+
+```javascript
+temperature.set_name('Humidity sensor');
+```
+
+#Full Example
+
+```javascript
+var temperature = new adc(1, 'Temperature Sensor');
+
+if (temperature.request()) {
+	console.log('Failed to request temperature sensor analog pin');
+} else {
+	console.log('Temperature: ' + temperature.get_value());
+	temperature.release();
+}
+```
+
+   * See [adc-test.js](/test/adc-test.js)
 

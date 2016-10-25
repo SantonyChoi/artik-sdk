@@ -1,176 +1,345 @@
-# Module PWM
-   > This README permits to introduce each API function of the module PWM.
+#PWM API
 
-## 1. Initialize & clean an usage with the PWM module
-   * Include the headers  
-   First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.  
-   **_ex\._**:  
+##Constructor
 
 ```javascript
-	const artik = require('../lib/artik-sdk'); // Instantiate the main module object for accessing to the Artik SDK.  
-	const name = artik.get_platform_name(); // Get the platform name.  
-
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
-        }
-		    ...
+var signal = new pwm(Number pin, String name, Number period, Number polarity, Number duty_cycle);
 ```
- __NB__:  
-   After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.  
-   
-   * Instantiate the module  
-   From the main module we can call the module PWM constructor.  
-   **_ex\._**:  
+
+**Description**
+
+Create and configure a new instance of a PWM signal.
+
+**Parameters**
+
+ - *Number*: PWM pin number. This value is defined in the board-specific
+definition files.
+ - *String*: friendly name to store for the PWM signal.
+ - *Number*: period of the PWM signal in nanoseconds.
+ - *Number*: polarity of the signal. Must be **0** (normal) or **1** (inverted).
+ - *Number*: active time of the signal in nanoseconds over the full period.
+**Return value**
+
+New instance.
+
+**Example**
 
 ```javascript
-	var pwm = artik.pwm(a5.ARTIK_A5_PWM.PWMIO.XPWMIO1, "pwm-test", 400000, a5.ARTIK_A5_PWM.POLR.NORMAL, 200000);
-	// The polarity and chip number use the platform module variables.
-		...
+var signal = new pwm(1, "square", 10000, 0, 5000);
 ```
- __NB__:  
-   \- The first parameter serves to define which chip number should be use into the PWM object;  
-   \- The second is the friendly name;  
-   \- The third is the value of the duty cycle (the max value for a period);  
-   \- The fourth sets the polarity of the module;  
-   \- The last is the value of a period.  
 
-   * Function : 'request'  
-   'request' permits to request the module.    
-   It will not allow to share the same PWM chip with another instance of module PWM, otherwise the function will throw an exception.   
-   **_ex\._**:  
+##request
 
 ```javascript
-	pwm.request();
-		...
+Number request()
 ```
 
-   * Function : 'release'  
-   'release' serves to release the ressources.   
-   Otherwise the next 'request' call with the same chip number will fail.   
-   **_ex\._**:  
+**Description**
+
+Request the PWM pin tied to the PWM instance. If this one has
+already been requested by some other program, the function will return
+an error. When the calling program is no longer using the PWM signal,
+it should release it by calling the *release* function.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##release
 
 ```javascript
-	pwm.release();
-		...
+Number release()
 ```
 
-## 2. Process with the PWM module
-   * Function : 'enable'  
-   'enable' switch on the module.  
-   **_ex\._**:  
+**Description**
+
+Release a PWM signal after being previously reserved by the *request*
+function.
+
+**Parameters**
+
+None
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##enable
 
 ```javascript
-	pwm.enable();
-		...
+Number enable()
 ```
 
-   * Function : 'disable'  
-   'disable' switch off the module.  
-   **_ex\._**:  
+**Description**
+
+Enable the PWM output.
+
+**Parameters**
+
+None
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##disable
 
 ```javascript
-	pwm.disable();
-		...
+Number disable()
 ```
 
-   * Function : 'set_period'  
-   'set_period' permits to set the value of the PWM period (the value cannot be greater than the duty cycle).  
-   **_ex\._**:  
+**Description**
+
+Disable the PWM output.
+
+**Parameters**
+
+None
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##set_pin_num
 
 ```javascript
-	pwm.set_period(300000); // the value is < 400 000 (because the duty cycle is egual to this value).  
-		...
+Number set_pin_num(Number pin)
 ```
 
-   * Function : 'set_polarity'  
-   'set_polarity' permits to set the direction polarity.  
-   **_ex\._**:  
+**Description**
+
+Change the pin number of the PWM signal
+
+**Parameters**
+
+ - *Number*: pin number of the PWM signal.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##set_name
 
 ```javascript
-	pwm.set_polarity(ARTIK_A5_PWM.POLR.INVERT);  
-		...
+Number set_name(String name)
 ```
 
-   * Function : 'set_duty_cycle'  
-   'set_duty_cycle' permits to define the maximum value of a signal.  
-   **_ex\._**:  
+**Description**
+
+Change the friendly name of the PWM signal.
+
+**Parameters**
+
+ - *String*: friendly name of the PWM signal.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##set_period
 
 ```javascript
-	pwm.set_duty_cycle(500000);
-		...
+Number set_period(Number period)
 ```
 
-   * Function : 'set_pin_num'  
-   'set_pin_num' permits to set the chip number use by a module PWM object.  
-   **_ex\._**:  
+**Description**
+
+Change the period of the PWM signal
+
+**Parameters**
+
+ - *Number*: period of the PWM signal in nanoseconds.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##set_duty_cycle
 
 ```javascript
-	pwm.set_pin_num(a5.ARTIK_A5_PWM.PWMIO.XPWMIO2);
-		...
+Number set_duty_cycle(Number duty_cycle)
 ```
 
-   * Function : 'set_name'  
-   'set_name' permits to set the friendly name of the module.  
-   **_ex\._**:  
+**Description**
+
+Change the duty cycle of the PWM signal
+
+**Parameters**
+
+ - *Number*: active time of the signal in nanoseconds over the full period.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##set_polarity
 
 ```javascript
-	pwm.set_name("new_test_pwm_name");
-		...
+Number set_polarity(Number polarity)
 ```
 
-   * Function : 'get_period'  
-   'get_period' retrieves the intensity value of a period.    
-   **_ex\._**:  
+**Description**
+
+Change the polarity of the PWM signal
+
+**Parameters**
+
+ - *Number*: polarity of the signal. Must be **0** (normal) or **1** (inverted).
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##get_pin_num
 
 ```javascript
-    console.log("Period value : [%d]", pwm.get_period());
-		...
+Number get_pin_num()
 ```
 
-   * Function : 'get_polarity'  
-   'get_polarity' retrieves the polarity of the module.   
-   **_ex\._**:  
+**Description**
+
+Get the pin number of the PWM signal.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+ - *Number*: PWM pin number.
+
+**Example**
+
+See [full example](#full-example)
+
+##get_name
 
 ```javascript
-	console.log("Polarity value : [%d]", pwm.get_polarity());
-		...
+String get_name()
 ```
 
-   * Function : 'get_duty_cycle'  
-   'get_duty_cycle' retrieves the value of the duty cycle store into the module.  
-   **_ex\._**:  
+**Description**
+
+Get the friendly name of the PWM signal.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+ - *String*: friendly name of the PWM signal.
+
+**Example**
+
+See [full example](#full-example)
+
+##get_period
 
 ```javascript
-	console.log("Duty Cycle value : [%d]", pwm.get_duty_cycle());
-		...
+Number get_period()
 ```
 
-   * Function : 'get_pin_num'  
-   'get_pin_num' retrieves the chip number of the module.  
-   **_ex\._**:  
+**Description**
+
+Get the period of the PWM signal.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+ - *Number*: period in nanoseconds of the PWM signal.
+
+**Example**
+
+See [full example](#full-example)
+
+##get_duty_cycle
 
 ```javascript
-	console.log("Chip number value : [%d]", pwm.get_pin_num());
-		...
+Number get_duty_cycle()
 ```
 
-   * Function : 'get_name'  
-   'get_name' retrieves the friendly name of the module.  
-   **_ex\._**:  
+**Description**
+
+Get the duty cycle of the PWM signal.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+ - *Number*: active time in nanosecond of the PWM signal over the full period.
+
+**Example**
+
+See [full example](#full-example)
+
+##get_polarity
 
 ```javascript
-	console.log("Name value : [%s]", pwm.get_name());
-		...
+Number get_polarity()
 ```
 
-## 3. Full example
+**Description**
 
-   * See [the test file](/test/pwm-test.js)
+Get the polarity of the PWM signal.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+ - *Number*: polarity of the PWM signal. Can be **0** (normal) or **1** (inverted).
+
+**Example**
+
+See [full example](#full-example)
+
+#Full example
+
+   * See [pwm-test.js](/test/pwm-test.js)

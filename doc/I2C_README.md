@@ -1,111 +1,169 @@
-# Module I2C
-   > This README permits to introduce each API function of the module I2C.
+#I2C API
 
-## 1. Initialize & clean an usage with the module I2C
-   * Include the headers  
-   First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.  
-   **_ex\._**:  
+##Constructor
 
 ```javascript
-	const artik = require('../lib/artik-sdk'); // Instantiate the main module object for accessing to the Artik SDK.  
-	const name = artik.get_platform_name(); // Get the platform name.  
-
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
-        }
-		...
+var chip = new i2c(Number id, Number frequency, String word_size, Number address);
 ```
- __NB__:  
-   After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.    
-   
-   * Instantiate the module  
-   From the main module we can call the module I2C constructor.  
-   **_ex\._**:  
+
+**Description**
+
+Create and configure a new instance of an I2C chip.
+
+**Parameters**
+
+ - *Number*: ID of the I2C bus to target. This value is defined in the board-specific
+definition files.
+ - *Number*: maximum frequency to which the bus should operate when performing a transaction.
+ - *String*: size of a word (in bits) to be transmitted over the I2C bus. Must be **8** or **16**.
+ - *Number*: address of the I2C chip to target.
+
+**Return value**
+
+New instance.
+
+**Example**
+
+See [Full example](#full-example)
+
+##request
 
 ```javascript
-	var i2c = artik.i2c(1, 2000, '8', 0x62);
-		...
+Number request()
 ```
- __NB__:  
-   \- The first parameter is the I2C controller ID;  
-   \- The second is the maximum frequency;  
-   \- The third parameter is the word size for the chip;  
-   \- The last parameter is the address of the chip.  
 
-   * Function : 'request'  
-   'request' permits to request the module I2C with the given configuration, return an error if it's fail.  
-   **_ex\._**:  
+**Description**
+
+Request the I2C bus/address pair tied to the I2C instance. If this one has
+already been requested by some other program, the function will return
+an error. When the calling program is no longer using the I2C chip, it should
+release it by calling the *release* function.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: Error code.
+
+**Example**
+
+See [Full example](#full-example)
+
+##release
 
 ```javascript
-	if (i2c.request() != S_OK) {
-		...
+Number release()
 ```
 
-   * Function : 'release'  
-   'release' serves to free the ressources require by the object module I2C.  
-   **_ex\._**:  
+**Description**
+
+Release a I2C bus/address pair after being previously reserved by the *request*
+function.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [Full example](#full-example)
+
+##read
 
 ```javascript
-	i2c.release();
-		...
+Buffer read(Number length)
 ```
 
-## 2. Process with the I2C module
-   * Function : 'read'  
-   'read' permits to read at the chip adress.  
-   **_ex\._**:  
+**Description**
+
+Perform a read transaction over the I2C bus.
+
+**Parameters**
+
+ - *Number*: length in bytes of the data to read from the bus.
+
+**Return value**
+
+*Buffer*: buffer containing the data read from the bus.
+
+**Example**
+
+See [Full example](#full-example)
+
+##write
 
 ```javascript
-	var reg = i2c.read(1);
-	console.log('Version: ' + Buffer(reg).toString('hex'));
-		...
+Number write(Buffer data)
 ```
 
-   * Function : 'write'  
-   'write' permits to write at the chip adress.  
-   **_ex\._**:  
+**Description**
+
+Perform a write transaction over the I2C bus.
+
+**Parameters**
+
+ - *Buffer*: buffer containing the data to write to the I2C bus.
+
+**Return value**
+
+*Number*: Error code.
+
+**Example**
+
+See [Full example](#full-example)
+
+##read_register
 
 ```javascript
-	var reg = new Buffer([0xff], 'hex');
-	console.log('Writing 0x' + Buffer(reg).toString('hex') + ' to config register');
-	i2c.write(reg);
-		...
+Buffer read_register(Number address, Number length)
 ```
 
-   * Function : 'read_register'  
-   'read_register' reads to a specific register from the chip adress.  
-   **_ex\._**:  
+**Description**
+
+Read a register from a remote I2C chip.
+
+**Parameters**
+
+ - *Number*: subaddress of the register to read from the remote chip.
+ - *Number*: length in bytes of the data to read from the register.
+
+**Return value**
+
+*Buffer*: buffer containing the data read from the register.
+
+**Example**
+
+See [Full example](#full-example)
+
+##write_register
 
 ```javascript
-	console.log('Version: ' + Buffer(i2c.read_register(0, 1)).toString('hex'));
-		...
+Number write_register(Number address, Buffer data)
 ```
- __NB__:  
-   \- The first parameter is the register number;  
-   \- The last is the max size for read.  
 
-   * Function : 'write_register'  
-   'write_register' writes to a specific register from the chip adress.  
-   **_ex\._**:  
+**Description**
 
-```javascript
-	var reg = new Buffer([0xff], 'hex');
-	console.log('Writing 0x' + Buffer(reg).toString('hex') + ' to config register');
-	i2c.write_register(8, reg);
-		...
-```
- __NB__:  
-   \- The first parameter is the address of the register;  
-   \- the last is the data to write.  
+Write to a register on a remote I2C chip.
 
-## 3. Full example
+**Parameters**
 
-   * See [the test file](/test/i2c-test.js)
+ - *Number*: subaddress of the register to write on the remote chip.
+ - *Buffer*: buffer containing the date to write to the register.
+
+**Return value**
+
+*Number*: Error code.
+
+**Example**
+
+See [Full example](#full-example)
+
+#Full example
+
+   * See [i2c-test.js](/test/i2c-test.js)

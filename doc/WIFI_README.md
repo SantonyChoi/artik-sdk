@@ -1,120 +1,188 @@
-# Module Wifi
-   > This README permits to introduce each API functions of the module Wifi.
+#Wi-Fi API
 
-## 1. Initialize & clean an usage with the module Wifi
-   * Include the headers  
-   First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.  
-   **_ex\._**:  
+##scan_request
 
 ```javascript
-	const artik = require('../lib/artik-sdk'); // Include dependencies of the Artik SDK.  
-    const Wifi = require('../src/wifi'); // Instanciate the main module object.  
-	const name = artik.get_platform_name(); // Get the platform name.
-
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
-        }
-		...
+String scan_request()
 ```
- __NB__:  
-   \- After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.  
-   \- Also be carefull due to the system of event emitter we need to construct the object from the javascript layer not the node.js addon C++.
-   
-   * Instantiate the module  
-   From the main module we can call the module Wifi constructor.  
-   **_ex\._**:  
+
+**Description**
+
+Start a scan of the surrounding Wi-Fi access points. The application
+should catch the **scan** event to get the results.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: Error message.
+
+**Example**
+
+See [full example](#full-example)
+
+##get_scan_result
 
 ```javascript
-	var wifi = new Wifi();
-		...
+String get_scan_result()
 ```
 
-## 2. Process with the Wifi module
-   * Function : 'connect'  
-   'connect' permits to connect to a specific endpoint.  
-   **_ex\._**:  
+**Description**
+
+Return the list of all the access points that were previously discovered during
+the scan process.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: JSON formatted string containing the surrounding Wi-Fi access points.
+
+**Example**
+
+See [full example](#full-example)
+
+##connect
 
 ```javascript
-	var ssid = '<enter a SSID here>';  
-	var pwd = '<passphrase of the SSID>';  
-
-	wifi.connect(ssid, pwd, true);  
-		...
+String connect(String ssid, String passphrase, Boolean persistent)
 ```
- __NB__:  
-   \- The first parameter inform wich endpoint we want to request;  
-   \- The second is the password associates to the endpoint;  
-   \- Finally the last permits to enable the persistency.  
 
-   * Function : 'disconnect'  
-   'disconnect' permits to disconnect the module from the endpoint.  
-   **_ex\._**:  
+**Description**
+
+Connect to a specific access point. Calling application should catch the 
+**connected** event to be notified of the success of the connection.
+
+**Parameters**
+
+ - *String*: SSID of the access point to connect to.
+ - *String*: secure passphrase of the access point. Ignored if no security is
+requested by the acces point.
+ - *Boolean*: if **true** store access point configuration to be persistent
+across reboot.
+
+**Return value**
+
+*String*: Error message.
+
+**Example**
+
+See [full example](#full-example)
+
+##disconnect
 
 ```javascript
-	wifi.disconnect();
-		...
+String disconnect()
 ```
 
-   * Function : 'scan_request'  
-   'scan_request' process a 'scan' command.  
-   **_ex\._**:  
+**Description**
+
+Disconnect from the current access point.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: Error message.
+
+**Example**
+
+See [full example](#full-example)
+
+#Events
+
+##started
 
 ```javascript
-	wifi.scan_request();  
-		...
+wifi.on('started', function())
 ```
+**Description**
 
-   * Function : 'get_scan_result'  
-   'get_scan_result' list the results of the command 'scan'.  
-   **_ex\._**:  
+Called after the Wi-Fi subsystem has been properly initialized.
+
+**Parameters**
+
+None.
+
+**Example**
+
+See [full example](#full-example)
+
+##scan
 
 ```javascript
-	console.log(wifi.get_scan_result());  
-		...
+wifi.on('scan', function(String list))
 ```
+**Description**
 
-   * Function : 'getScanCb'  
-   'getScanCb' retrieves the callback use by the scan process.  
-   **_ex\._**:  
+Return the scan results in a JSON formatted string.
+
+**Parameters**
+
+ - *String*: JSON formatted string containing the surrounding Wi-Fi access points.
+
+**Example**
+
+See [full example](#full-example)
+
+##connected
 
 ```javascript
-	var wifi_bis = artik.Wifi();
-	wifi_bis.on('scan', wifi.getScanCb()); // store the same callback 'scan' into the second Wifi object.  
-		...
+wifi.on('connected', function())
 ```
+**Description**
 
-   * Function : 'getConnectCb'  
-   'getConnectCb' retrieves the callback use by the connect process.  
-   **_ex\._**:  
+Called after successful connection to an access point.
+
+**Parameters**
+
+None.
+
+**Example**
+
+See [full example](#full-example)
+
+#Full example
 
 ```javascript
-	var wifi_bis = artik.Wifi();
-	wifi_bis.on('connect', wifi.getConnectCb()); // store the same callback 'connect' into the second Wifi object.  
-		...
+var artik = require('artik-sdk');
+var wifi = new artik.wifi();
+
+var ssid = '<enter a SSID here>';
+var pwd = '<passphrase of the SSID>';
+
+wifi.on('started', function() {
+	wifi.scan_request();
+});
+
+wifi.on('connected', function() {
+	console.log('connected');
+	process.exit(0);
+});
+
+wifi.on('scan', function(list) {
+	var results = JSON.parse(list);
+	console.log(results);
+	var ap = results.filter(function(item) {
+		return item.name == ssid;
+	});
+
+	if (ap.length > 0) {
+		console.log('Found SSID ' + ssid + ', connecting...');
+		wifi.disconnect();
+		wifi.connect(ssid, pwd, false);
+	}
+});
+
+process.on('SIGINT', function () {
+	process.exit(0);
+});
 ```
 
-   * Function : 'on'  
-   'on' permits to store a callback associates to an event.  
-   **_ex\._**:  
-
-```javascript
-	var wifi_bis = artik.Wifi();
-	wifi_bis.on('connect', function () { // store the same callback 'connect' into the second Wifi object.  
-             console.log("Welcome...");
-    });  
-		...
-```
-
-
-
-## 3. Full example
-
-   * See [the test file](/test/wifi-test.js)
+   * See [wifi-test.js](/test/wifi-test.js)

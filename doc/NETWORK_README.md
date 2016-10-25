@@ -1,60 +1,62 @@
-# Module Network
-   > This README permits to introduce each API function of the module Network.  
+#Network API
 
-## 1. Initialize & clean an usage with the module Network
-   * Include the headers  
-   First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.  
-   **_ex\._**:  
+##get_current_ip
 
 ```javascript
-	const artik = require('../lib/artik-sdk'); // Instantiate the main module object for accessing to the Artik SDK.  
-	const name = artik.get_platform_name(); // Get the platform name.  
-
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
-        }
-		...
+String get_current_ip()
 ```
- __NB__:  
-   After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.  
-   
-   * Instantiate the module  
-   From the main module we can call the module Network constructor.  
-   **_ex\._**:  
+
+**Description**
+
+Get the current public IP address exposed by the device on the web.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String* containing the public IP address by which the device is known on the web.
+
+**Example**
 
 ```javascript
-	var network = artik.network();
-		...
+console.log('Public IP: ' + network.get_current_ip());
 ```
 
-## 2. Process with the module Network
-   * Function : 'get_current_ip'  
-   'get_current_ip' serves for retrieve the host IP.  
-   **_ex\._**:  
+##get_online_status
 
 ```javascript
-	console.log("MY IP Address : " +network.get_current_ip());
-		...
+get_online_status(function(String status))
 ```
- __NB__:  
-   The first and lonely parameter serves to store a callback for retrieving the host IP.    
 
-   * Function : 'get_online_status'  
-   'get_online_status' serves to know if the network is establish.  
-   **_ex\._**:   
+**Description**
+
+Get notified of web connectivity changes.
+
+**Parameters**
+
+ - *function(String)* callback function called whenever a change occurs on the network 
+connectivity of the device. The status is passed as a JSON formatted *String* as shown below:
+
 ```javascript
-	console.log("There is a connexion : " +network.get_online_status());
-		...
+{
+	"online_status": "0"
+}
 ```
 
-## 3. Full example
+**Return value**
 
-   * See [the test file](/test/network-test.js)
+None.
+
+**Example**
+
+```javascript
+network.get_online_status(function(status) {
+	console.log('New connectivity status: ' + status);
+});
+```
+
+#Full example
+
+   * See [network-test.js](/test/network-test.js)

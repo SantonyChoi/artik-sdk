@@ -1,133 +1,225 @@
-# Module GPIO 
-   > This README permits to introduce each API functions of the module GPIO.
+#GPIO API 
 
-## 1. Initialize & clean an usage with the module GPIO 
-   * Include the headers  
-   First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.  
-   **_ex\._**:  
+##Constructor
 
 ```javascript
-	const artik = require('../lib/artik-sdk');  // Include dependencies of the Artik SDK.  
-    const Gpio = require('../src/gpio'); // Instanciate the main module object.  
-	const name = artik.get_platform_name(); // Get the platform name.
-
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
-        }
-		...
+var io = new gpio(Number gpio_id, String name, String direction, String type, String edge, Number init_value);
 ```
- __NB__:  
-   \- After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.    
-   \- Also be carefull due to the system of event emitter we need to construct the object from the javascript layer not the node.js addon C++.  
-   
-   * Instantiate the module  
-   From the main module we can call the module GPIO constructor.  
-   **_ex\._**:  
+
+**Description**
+
+Create and configure a new instance of the GPIO tied to a specific hardware pin.
+
+**Parameters**
+
+ - *Number*: ID of the GPIO to configure. This value is defined in the board-specific
+definition files.
+ - *String*: friendly name to attach to the GPIO.
+ - *String*: direction to set for the GPIO. Must be **out** or **in**.
+ - *String*: type of the IO. Must be **analog** or **digital**.
+ - *String*: edge on which interrupts should be triggered. Must be **rising**, **falling**, **both**, or
+**none**. This parameter is ignored when the GPIO is configured as an output.
+ - *Number*: initial value to set after configuration when the GPIO is set as an output. Must be **0** or **1**. This parameter is ignored when the GPIO is configured as an input.
+
+**Return value**
+
+New instance.
+
+**Example**
 
 ```javascript
-	var gpio = new Gpio(a5.ARTIK_A5_GPIO_XEINT1, 'button', 'in' , 'digital', 'both', 0);
-		...
+var led = new gpio(1, 'Green LED', 'out', 'digital', 'none', 0);
+var button = new gpio(2, 'User Button', 'in', 'digital', 'rising', 0);
 ```
- __NB__:  
-   \- The first parameter is the digital pin number;  
-   \- The second the friendly name;  
-   \- The third for the direction;  
-   \- The fourth is the type;  
-   \- The fifth is the edge for detect the change state;  
-   \- The last is the initial value.  
 
-   * Function : 'request'  
-   'request' permits to request the module GPIO with the given configuration, return an error if it's fail.  
-   **_ex\._**:  
+##request
 
 ```javascript
-	gpio.request();
-		...
+Number request()
 ```
 
-   * Function : 'release'  
-   'release' serves to free the ressources require by the object module GPIO.  
-   **_ex\._**:  
+**Description**
+
+Request the GPIO pin tied to the GPIO instance. If this one has
+already been requested by some other program, the function will return
+an error. When the calling program is no longer using the GPIO, it should
+release it by calling the *release* function.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##release
 
 ```javascript
-	gpio.release();
-		...
+Number release()
 ```
 
-## 2. Process with the GPIO module
-   * Function : 'read'  
-   'read' permits to read to the digital pin.  
-   **_ex\._**:  
+**Description**
+
+Release a GPIO pin after being previously reserved by the *request*
+function.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [full example](#full-example)
+
+##read
 
 ```javascript
-	console.log("Value on digital pin : "+gpio.read());
-		...
+Number read()
 ```
 
-   * Function : 'write'  
-   'write' permits to write to the digital pin.  
-   **_ex\._**:  
+**Description**
+
+Read the current state of the GPIO when this one is configured as an input.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: current state of the pin. Can be **0** (inactive) or **1** (active).
+
+**Example**
+
+See [full example](#full-example)
+
+##write
 
 ```javascript
-	gpio.write(1);
-		...
+Number write(Number state)
 ```
 
-   * Function : 'get_name'  
-   'get_name' retrieves the friendly name of the module.  
-   **_ex\._**:  
+**Description**
+
+Set the state of the GPIO when this one is configured as an output.
+
+**Parameters**
+
+ - *Number*: state to set to the output. Must be **0** (inactive) or **1** (active).
+
+**Return value**
+
+*Number*: Error code.
+
+**Example**
+
+See [full example](#full-example)
+
+##get_name
 
 ```javascript
-	console.log("gpio name : " + gpio.get_name());
-		...
+String get_name()
 ```
 
-   * Function : 'get_direction'  
-   'get_direction' retrieves the direction of the module.  
-   **_ex\._**:  
+**Description**
+
+Get the friendly name of the GPIO instance.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: friendly name of the GPIO.
+
+**Example**
 
 ```javascript
-	console.log("gpio direction : " + gpio.get_direction());
-		...
+console.log('Name: ' + led.get_name());
 ```
 
-   * Function : 'get_type'  
-   'get_type' retrieves the type of the module.  
-   **_ex\._**:  
+##get_direction
 
 ```javascript
-	console.log("gpio type : " + gpio.get_type());
-		...
+String get_direction()
 ```
 
-   * Function : 'get_id'  
-   'get_id' retrieves the digital pin number of the module.  
-   **_ex\._**:  
+**Description**
+
+Get the direction of the GPIO instance.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: direction of the GPIO, can be **out** or **in**.
+
+**Example**
 
 ```javascript
-	console.log("gpio pin number : " + gpio.get_id());
-		...
+console.log('Direction: ' + led.get_direction());
 ```
 
-   * Function : 'on'  
-   'on' permits to store a callback associates to an event.  
-   **_ex\._**:  
+##get_type
 
 ```javascript
-	button.on('changed', function(val) {
-		console.log("Button state: " + val);
-	});
-		...
+String get_type()
 ```
-	
-## 3. Full example
 
-   * See [the test file](/test/gpio-test.js)
+**Description**
+
+Get the type of the GPIO instance.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: type of the GPIO, can be **digital** or **analog**.
+
+**Example**
+
+```javascript
+console.log('Type: ' + led.get_type());
+```
+
+##get_id
+
+```javascript
+String get_id()
+```
+
+**Description**
+
+Get the ID of the GPIO instance.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: ID of the GPIO pin.
+
+**Example**
+
+```javascript
+console.log('ID: ' + led.get_id());
+```
+
+#Full example
+
+   * See [gpio-test.js](/test/gpio-test.js)

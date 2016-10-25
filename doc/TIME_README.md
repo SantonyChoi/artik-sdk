@@ -1,151 +1,253 @@
-# Module Time
-   > This README permits to introduce each API function of the module Time.  
+# Time API
 
-## 1. Initialize & clean an usage with the module Time
-   * Include the headers  
-   First of all, we should include the main module of the Artik SDK and its dependencies which depend on the Artik board version.  
-   **_ex\._**:  
+##set_time
 
 ```javascript
-	const artik = require('../lib/artik-sdk'); // Instantiate the main module for accessing to the Artik SDK.  
-	const name = artik.get_platform_name(); // Get the platform name.  
-
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
-        }
-		...
-```
- __NB__:  
-   After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.  
-   
-   * Instantiate the module  
-   From the main module object we can call the module Time constructor.   
-   **_ex\._**:  
-
-```javascript
-	var time = artik.time();
-		...
+	Number set_time(Date date)
 ```
 
-## 2. Process with the module Time 
-### A. The module Time 
-   * Function : 'set_time'  
-   'set_time' serves to set the system clock with a native Date object.  
-   **_ex\._**:  
+**Description**
+
+Set the current system time
+
+**Parameters**
+
+ - *Date*: object containing the date to set
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
 
 ```javascript
-	var new_js_date = new Date(); // We create a native Date object.  
-	new_js_date.setUTCSeconds(new_js_date.getUTCSeconds()+6000);// We add an certain amount of seconds.  
-	time.set_time(new_js_date) // Then we can modify the system clock.  
-		...
+	var today = new Date(2016, 10, 19); 
+	time.set_time(today);
 ```
 
-   * Function : 'get_time'  
-   'get_time' serves to get the actual GMT time store into a native Date object.   
-   **_ex\._**:  
+##get_time
 
 ```javascript
-	console.log("Time Date JS object = "+time.get_time());
-		...
+	Date get_time()
 ```
 
-   * Function : 'get_time_str'  
-   'get_time_str' serves to get the actual GMT time by a String object.  
-   **_ex\._**:  
+**Description**
+
+Get the current system time
+
+**Parameters**
+
+None
+
+**Return value**
+
+*Date*: object containing the current date
+
+**Example**
 
 ```javascript
-	console.log("Time String JS object = "+time.get_time_str());  
-		...
+	var now = time.get_time();
 ```
 
-   * Function : 'get_tick'  
-   'get_tick' permits to return the actual time in milli-seconds.  
-   **_ex\._**:  
-
+##get_time_str
 ```javascript
-	var begin = time.get_tick();  
-
-	while ((time.get_tick() - begin) < 10000) // Check if the loop process is less than 10 seconds.  
-		...
+	String get_time_str(String format, Number timezone)
 ```
 
-   * Function : 'create_alarm_second'  
-   'create_alarm_second' creates an alarm and takes an amount of seconds as parameter.  
-   **_ex\._**:  
+**Description**
+
+Get the current system time formatted as a string
+
+**Parameters**
+
+- *String*: format of the string to return. e.g. ```h:m:s:S-d-D/M/Y```
+
+Where:
+
+```
+	h: hours
+	m: minutes
+	s: seconds
+	S: millisecondes since EPOCH
+	d: day of the week
+	D: day of the month
+	Y: year
+``` 
+ - *Number*: timezone in GMT format
+  
+```
+	UTC: 0
+	GMT1: 1
+	GMT2: 2
+	GMT3: 3
+	GMT4: 4
+	GMT5: 5
+	GMT6: 6
+	GMT7: 7
+	GMT8: 8
+	GMT9: 9
+	GMT10: 10
+	GMT11: 11
+	GMT12: 12
+	
+	Negative GMT zones can be used as well. e.g. -1 for -GMT1
+```
+
+**Return value**
+
+*String* containing the formatted current time
+
+**Example**
 
 ```javascript
-	alarm = module.create_alarm_second(a5.ARTIK_A5_TIME.ZONE.GMT2, 42, function() {
-	    console.log("This function is call when the alarm reach its deadline.");
+	console.log('UTC current time is ' + time.get_time_str('h:m:s:S-d-D/M/Y', 0); 
+```
+
+##get_tick
+
+```javascript
+	Number get_tick()
+```
+
+**Description**
+
+Get the current system tick
+
+**Parameters**
+
+None
+
+**Return value**
+
+*Number*: current system tick in milliseconds
+
+**Example**
+
+```javascript
+	console.log('System tick: ' + get_tick());
+```
+
+##create_alarm_second
+
+```javascript
+	create_alarm_second(Number timezone, Number seconds, function())
+```
+
+**Description**
+
+Set an alarm to set off after a defined number of seconds. When the alarm
+sets off, the provided callback function is called.
+
+**Parameters**
+
+ - *Number*: timezone in GMT format
+
+ ```
+	UTC: 0
+	GMT1: 1
+	GMT2: 2
+	GMT3: 3
+	GMT4: 4
+	GMT5: 5
+	GMT6: 6
+	GMT7: 7
+	GMT8: 8
+	GMT9: 9
+	GMT10: 10
+	GMT11: 11
+	GMT12: 12
+	
+	Negative GMT zones can be used as well. e.g. -1 for -GMT1
+```
+
+- *Number*: number of seconds starting from current time after which the alarm sets off.
+- *function()*: callback function to be called when the alarm sets off. 
+
+**Return value**
+
+None
+
+**Example**
+
+```javascript
+	time.create_alarm_second(O, 42, function() {
+	    console.log("42 seconds have elapsed since the alarm was set");
 	});
-	// or a negativ GMT  
-    alarm = module.create_alarm_second(-a5.ARTIK_A5_TIME.ZONE.GMT2, 42, function() {
-	    console.log("This function is call 42 seconds after its registration.");
-	});
-		...
 ```
- __NB__:  
-   \- First parameter is use for set a local time;  
-   \- The second parameter is use as the starter value in seconds for the alarm cooldown;  
-   \- The last one is a callback wich is call when the alarm cooldown reach 0.  
 
-   * Function : 'create_alarm_date'  
-   'create_alarm_date' creates an alarm and take a native Date object as parameter.  
-   **_ex\._**:  
+##create_alarm_date
 
 ```javascript
-	alarm = module.create_alarm_date(a5.ARTIK_A5_TIME.ZONE.GMT2, new_date, function() {
-	    console.log("This function is call when the alarm reach its deadline.");  
-	});
-	// or a negativ GMT value
-	alarm = module.create_alarm_date(-a5.ARTIK_A5_TIME.ZONE.GMT2, new_date, function() {
-	    console.log("This function is call at the date indication after its registration.");  
-	});
-		...
+	create_alarm_date(Number timezone, Date date, function())
 ```
- __NB__:  
-   \- First parameter is use for set a local time;  
-   \- The second parameter is the expiry date of the alarm;    
-   \- The last is a callback wich is call when the alarm exceed the expiry date.   
 
-   * Function : 'sync_ntp'  
-   'sync_ntp' permits to connect to a specific server and then synchronize the system clock with the clock of the remote host.  
-   **_ex\._**:  
+**Description**
 
-```javascript 
-	if (module.sync_ntp(hostname) == S_OK)
-		console.log("Synchronization succeed !");  
-		...
+Set an alarm to set off at a specific date and time. When the alarm
+sets off, the provided callback function is called.
+
+**Parameters**
+
+ - *Number*: timezone in GMT format
+
+ ```
+	UTC: 0
+	GMT1: 1
+	GMT2: 2
+	GMT3: 3
+	GMT4: 4
+	GMT5: 5
+	GMT6: 6
+	GMT7: 7
+	GMT8: 8
+	GMT9: 9
+	GMT10: 10
+	GMT11: 11
+	GMT12: 12
+	
+	Negative GMT zones can be used as well. e.g. -1 for -GMT1
 ```
-### B. The object Alarm
-   * Function : 'cancel'  
-   'cancel' free the alarm.   
-   **_ex\._**:  
+
+- *Date*: date and time at which the alarm sets off.
+- *function()*: callback function to be called when the alarm sets off. 
+
+**Return value**
+
+None
+
+**Example**
 
 ```javascript
-	alarm.cancel();
-		...
+	var alarm_date = new Date("2017-07-04T05:00:00-07:00");
+	time.create_alarm_date(-7, alarm_date, function() {
+	    console.log("Time to light up the barbecue!");
+	});
 ```
 
-   * Function : 'get_delay'   
-   'get_delay' permits to get the remain time before the end of the alarm.  
-   **_ex\._**:  
+##sync_ntp
 
 ```javascript
-	console.log("Seconds remain : "+alarm.get_delay()+" secs...");
-		...
-
+	Number sync_ntp(String hostname)
 ```
 
-## 3. Full example
+**Description**
 
-   * See [the test file](/test/time-test.js)
+Synchronize current system time with NTP server.
 
+**Parameters**
 
+ - *String*: hostname of the NTP server to synchronize with.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+```javascript
+	time.sync_ntp('0.pool.ntp.org');
+```
+
+# Full example
+
+   * See [time-test.js](/test/time-test.js)

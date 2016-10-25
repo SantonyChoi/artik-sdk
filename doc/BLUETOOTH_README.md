@@ -1,161 +1,338 @@
-# Module Bluetooth
-   > This README permits to introduce each API function of the module Bluetooth.  
+#Bluetooth API
 
-## 1. Initialize & clean an usage with the module Bluetooth
-   * Include the headers  
-   First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.  
-   **_ex\._**:  
+##start_scan
 
 ```javascript
-	const artik = require('../lib/artik-sdk'); // Include dependencies of the Artik SDK.  
-	const Bluetooth = require('../src/bluetooth'); // Instanciate the main module object.  
-    const name = artik.get_platform_name(); // Get the platform name.  
-
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
-        }
-		...
+String start_scan(function(String result))
 ```
-  __NB__:  
-       \- After this step we should always call the main module object and use its dependencies for retriev or operates with the modules of the Artik SDK.  
-       \- Also be carefull due to the system of event emitter we need to construct the object from the javascript layer not from the node.js addon C++.  
 
-* Instantiate the module  
-   From the main module object we can call the module Bluetooth constructor.  
-   **_ex\._**:  
+**Description**
+
+Start scanning for surrounding Bluetooth devices.
+
+**Parameters**
+
+ - *function(String result)*: callback function called with scan results
+passed as a JSON formatted string parameter
+
+**Return value**
+
+*String*: Error
+
+**Example**
 
 ```javascript
-	var bt = artik.Bluetooth();
-		...
+bluetooth.start_scan(function(result) {
+	console.log('JSON scan results: ' + result);
+});
 ```
 
-## 2. Process with the module Bluetooth
-   * Function : 'start_scan'  
-   'start_scan' permits to launch the 'scan' command for discovering the other devices.  
-   **_ex\._**:  
+##stop_scan
 
 ```javascript
-	bt.start_scan();
-		...
+String stop_scan()
 ```
 
-   * Function : 'stop_scan'  
-   'stop_scan' permits to cancel the 'scan' command.  
-   **_ex\._**:  
+**Description**
+
+Stop scanning for Bluetooth devices. The callback set during the call to the
+*start_scan* function will no longer be called
+
+**Parameters**
+
+None
+
+**Return value**
+
+*String*: Error
+
+**Example**
 
 ```javascript
-	bt.stop_scan();
-		...
+bluetooth.stop_scan();
 ```
 
-   * Function : 'get_devices'  
-   'get_devices' retrieves the list of devices discovered.  
-   **_ex\._**:  
+##get_devices
 
 ```javascript
-	bt.get_devices();
-		...
+String get_devices()
 ```
 
-   * Function : 'get_paired_devices'  
-   'get_paired_devices' permits to retrieve the list of devices paired to the Artik board.  
-   **_ex\._**:  
+**Description**
+
+Return the list of Bluetooth devices that were previously discovered during
+scan.
+
+**Parameters**
+
+None
+
+**Return value**
+
+*String*: JSON formatted string containing the list of discovered devices and their
+properties.
+
+**Example**
 
 ```javascript
-	bt.get_paired_devices();
-		...
+console.log('Discovered devices: ' + bluetooth.get_devices());
 ```
 
-   * Function : 'get_connected_devices'  
-   'get_connected_devices' list the connected devices of the Artik board.  
-   **_ex\._**:  
+##get_connected_devices
 
 ```javascript
-	bt.get_connected_devices();
-		...
+String get_connected_devices()
 ```
 
-   * Function : 'start_bond'  
-   'start_bond' creates asynchronously a bond between the Artik board and a remote device.  
-   **_ex\._**:  
+**Description**
+
+Return the list of Bluetooth devices to which the device is currently connected to.
+
+**Parameters**
+
+None
+
+**Return value**
+
+*String*: JSON formatted string containing the list of connected devices and their
+properties.
+
+**Example**
 
 ```javascript
-	bt.start_bond(device.address);
-		...
+console.log('Connected devices: ' + bluetooth.get_connected_devices());
 ```
 
-   * Function : 'stop_bond'  
-   'stop_bond' permits to disable asynchronously a bond between the Artik board and a remote device.   
-   **_ex\._**:  
+##get_paired_devices
 
 ```javascript
-	bt.stop_bond(device.address);
-		...
+String get_paired_devices()
 ```
 
-   * Function : 'connect'  
-   'connect' serves to connect to a device.  
-   **_ex\._**:  
+**Description**
+
+Return the list of Bluetooth devices with which the device is currently paired.
+
+**Parameters**
+
+None
+
+**Return value**
+
+*String*: JSON formatted string containing the list of paired devices and their
+properties.
+
+**Example**
 
 ```javascript
-	bt.connect(device.address);
-		...
+console.log('Paired devices: ' + bluetooth.get_paired_devices());
 ```
 
-   * Function : 'disconnect'  
-   'disconnect' is use for disconnect the module from a device.  
-   **_ex\._**:  
+##start_bond
 
 ```javascript
-	bt.disconnect(device.address);
-		...
+String start_bond(String bdaddr, function(String result))
 ```
 
-   * Function : 'free_devices'  
-   'free_devices' free the devices list.  
-   **_ex\._**:  
+**Description**
+
+Start pairing process with a remote Bluetooth device.
+
+**Parameters**
+
+ - *String*: Bluetooth address of the remote device to pair with.
+ - *function(String result)*: callback function that will be called after the pairing
+process with the result (*paired* or *unpaired*) passed as string.
+
+**Return value**
+
+*String*: Error
+
+**Example**
 
 ```javascript
-	bt.free_devices();
-		...
+bluetooth.start_bond('01:02:03:04:05:06', function(result) {
+	console.log('Pairing status: ' + result);
+});
 ```
 
-   * Function : 'remove_unpaired_devices'  
-   'remove_unpaired_devices' releases a device from the list of devices.  
-   **_ex\._**:  
+##stop_bond
 
 ```javascript
-	bt.remove_unpaired_devices();
-		...
+String stop_bond(String bdaddr)
 ```
 
-   * Function : 'remove_device'  
-   'remove_device' destroy asynchronously a bond to a device.  
-   **_ex\._**:  
+**Description**
+
+Unpair with a previously paired Bluetooth remote device.
+
+**Parameters**
+
+ - *String*: Bluetooth address of the remote device to unpair with.
+
+**Return value**
+
+*String*: Error
+
+**Example**
 
 ```javascript
-	bt.remove_device(device);
-		...
+bluetooth.stop_bond('01:02:03:04:05:06');
 ```
 
-   * Function : 'on'  
-   'on' permits to store a callback associates to an event.  
-   **_ex\._**:  
+##connect
 
 ```javascript
-	bt.on('start', function() { console.log("test callback register"); } );  
-		...
+String connect(String bdaddr, function(String result))
 ```
 
+**Description**
 
-## 3. Full example
+Connect to a remote Bluetooth device.
 
-   * See [the test file](/test/bluetooth-test.js)
+**Parameters**
+
+ - *String*: Bluetooth address of the remote device to connect to.
+ - *function(String result)*: callback function that will be called after connection
+with the result (*connected* or *disconnected*) passed as string.
+
+**Return value**
+
+*String*: Error
+
+**Example**
+
+```javascript
+bluetooth.connect('01:02:03:04:05:06', function(result) {
+	console.log('Connection status: ' + result);
+});
+```
+
+##disconnect
+
+```javascript
+String disconnect(String bdaddr)
+```
+
+**Description**
+
+Disconnect from a previously connected Bluetooth remote device.
+
+**Parameters**
+
+ - *String*: Bluetooth address of the remote device to disconnect from.
+
+**Return value**
+
+*String*: Error
+
+**Example**
+
+```javascript
+bluetooth. disconnect('01:02:03:04:05:06');
+```
+
+##remove_unpaired_devices
+
+```javascript
+String remove_unpaired_devices()
+```
+
+**Description**
+
+Remove all devices to which the host is not paired from the discovered
+devices list.
+
+**Parameters**
+
+None
+
+**Return value**
+
+*String*: Error
+
+**Example**
+
+```javascript
+bluetooth.remove_unpaired_devices();
+```
+
+##remove_device
+
+```javascript
+String remove_device(String bdaddr)
+```
+
+**Description**
+
+Remove specific device from the discovered devices list.
+
+**Parameters**
+
+ - *String*: Bluetooth address of the remote device to remove.
+
+**Return value**
+
+*String*: Error
+
+**Example**
+
+```javascript
+bluetooth.remove_device('01:02:03:04:05:06');
+```
+
+##pxp_set_linkloss_level
+
+```javascript
+String pxp_set_linkloss_level(String addr, String level)
+```
+
+**Description**
+
+Set the alert level of a BLE device exposing the proximity link-loss
+profile.
+
+**Parameters**
+
+ - *String*: Bluetooth address of the remote device to configure.
+ - *String*: alert level to set. Must be one of: *none*, *mild*, or *high*.
+
+**Return value**
+
+*String*: Error
+
+**Example**
+
+```javascript
+bluetooth.pxp_set_linkloss_level('01:02:03:04:05:06', 'high');
+```
+
+##pxp_set_immediate_level
+
+```javascript
+String pxp_set_immediate_level(String addr, String level)
+```
+
+**Description**
+
+Set the alert level of a BLE device exposing the immediate alert
+service.
+
+**Parameters**
+
+ - *String*: Bluetooth address of the remote device to configure.
+ - *String*: alert level to set. Must be one of: *none*, *mild*, or *high*.
+
+**Return value**
+
+*String*: Error
+
+**Example**
+
+```javascript
+bluetooth.pxp_set_immediate_level('01:02:03:04:05:06', 'high');
+```
+
+##Full example
+
+   * See [bluetooth-test.js](/test/bluetooth-test.js)

@@ -1,99 +1,144 @@
-# Module SPI
-   > This README permits to introduce each API functions of the module SPI.
+#SPI API
 
-## 1. Initialize & clean an usage with the module SPI
-   * Include the headers
-   > First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.  
-   > **_ex\._**:  
+##Constructor
 
 ```javascript
-	const artik = require('../lib/artik-sdk'); // Instantiate the main module object for accessing to the Artik SDK.
-	const name = artik.get_platform_name(); // Get the platform name.
-
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
-        }
-		...
+var chip = new spi(Number bus, Number chipselect, Number mode, Number bpw, Number speed);
 ```
- __NB__:  
-   After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.  
-   
-   * Instantiate the module
-   > Then from the main module we can call the module SPI constructor.
-   > **_ex\._**:  
+
+**Description**
+
+Create and configure a new instance of an SPI chip.
+
+**Parameters**
+
+ - *Number*: controller ID of the SPI bus to use. This value is defined in the board-specific definition files.
+ - *Number*: chipselect pin connected to the SPI chip. This value is defined in the board-specific definition files.
+ - *Number*: SPI mode. Must be **0**, **1**, **2**, or **3**.
+ - *Number*: number of bits per word.
+ - *Number*: maximum speed in Hz to use on the SPI bus.
+
+**Return value**
+
+New instance.
+
+**Example**
+
+See [Full example](#full-example)
+
+##request
 
 ```javascript
-	var spi = artik.spi(a5.ARTIK_A5_SPI.BUS.BUS1, // depends on Artik 5 board
-			      a5.ARTIK_A5_SPI.CS.CS0,
-			      a5.ARTIK_A5_SPI.MODE.MODE0,
-			      a5.ARTIK_A5_SPI.BITS.BITS8,
-			      500000);
-		...
+Number request()
 ```
- __NB__:  
-   - The first parameter is the bus number;  
-   - The second is the chip select number;  
-   - The third is the mode controller;  
-   - The fourth the amount of bit per word;  
-   - The last bits max speed.  
 
-   * Function : 'request'
-   >  'request' permits to request the module SPI with the given configuration, return an error if it's fail.  
-   > **_ex\._**:  
+**Description**
+
+Request the SPI bus/chipselect pair tied to the SPI instance. If this one has
+already been requested by some other program, the function will return
+an error. When the calling program is no longer using the SPI chip, it should
+release it by calling the *release* function.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: Error code.
+
+**Example**
+
+See [Full example](#full-example)
+
+##release
 
 ```javascript
-	if (spi.request() != S_OK) {
-		...
+Number release()
 ```
 
-   * Function : 'release'
-   > 'release' serves to free the ressources require by the object module SPI.  
-   > **_ex\._**:  
+**Description**
+
+Release a SPI bus/chipselect pair after being previously reserved by the *request* function.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [Full example](#full-example)
+
+##read
 
 ```javascript
-	spi.release()
-		...
+Buffer read(Number length)
 ```
 
-## 2. Process with the SPI module
-   * Function : 'read'
-   > 'read' permits to read to the 'rx' port.  
-   > **_ex\._**:  
+**Description**
+
+Read data from the SPI bus.
+
+**Parameters**
+
+ - *Number*: number of words to read from the bus.
+
+**Return value**
+
+*Buffer*: buffer containing the read data.
+
+**Example**
+
+See [Full example](#full-example)
+
+##write
 
 ```javascript
-	var buffer_read = spi.read(45) // Pass the lenght max for read and return the message if it can read else return an error.
-		...
+Number write(Buffer data)
 ```
 
-   * Function : 'write'
-   > 'write' permits to write directly to the 'tx' port.  
-   > **_ex\._**:  
+**Description**
+
+Write data to the SPI bus.
+
+**Parameters**
+
+ - *Buffer*: buffer containing the data to send.
+
+**Return value**
+
+*Number*: Error code.
+
+**Example**
+
+See [Full example](#full-example)
+
+##read_write
 
 ```javascript
- 	var buff_write = new Buffer([0x4, 0x0], 'hex');  
-	var nb_wrote = spi.write(buff_write) // Return the lenght of the sent message else return an error.  
-		...
+Buffer read_write(Buffer data)
 ```
 
-   * Function : 'read_write'
-   > 'read_write' merges the two capabilities for read or write a message.  
-   > **_ex\._**:  
+**Description**
 
-```javascript
-	var buff_read = new Buffer([0x84, 0x0], 'hex'); // value for a command read ((0x2 << 1 ) | 0x80).  
-	var buff_write = new Buffer([0x4, 0x0], 'hex'); // value for a command write (0x2 << 1).  
-	var error_val = spi.read_write(buff_read, buff_write, 2) // Store the message into parameters or send the message if it can else return an error.   
-		...
-```
+Read and write data simultaneously on the SPI bus.
 
-## 3. Full example
+**Parameters**
 
-   * See [the test file](/test/spi-test.js)
+ - *Buffer*: buffer containing the data to send.
+
+**Return value**
+
+*Buffer*: buffer containing the read data.
+
+**Example**
+
+See [Full example](#full-example)
+
+#Full example
+
+   * See [spi-test.js](/test/spi-test.js)

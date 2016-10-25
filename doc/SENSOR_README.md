@@ -1,299 +1,481 @@
-# Module Sensor
-   > This README permits to introduce each API functions of the module Sensor.  
+#Sensor API
+## Sensor types
+| Type           | Value |
+|:---------------|:-----:|
+| Accelerometer  | 1     |
+| Humidity       | 2     |
+| Light          | 3     |
+| Temperature    | 4     |
+| Proximity      | 5     |
+| Flame          | 6     |
 
-## 1. Initialize & clean an usage with the module Sensor  
-   * Include the headers  
-   First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.  
-   **_ex\._**:  
-
-```javascript
-	const artik = require('../lib/artik-sdk'); // Instantiate the main module object for accessing to the Artik SDK.  
-	const name = artik.get_platform_name(); // Get the platform name.  
-
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
-        }
-		...
-```
- __NB__:  
-   After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.  
-   
-   * Instantiate the module  
-   From the main module we can call the module Sensor constructor.  
-   **_ex\._**:  
-
-```javascript	
-	var module_sensor = artik.sensor(); // Instantiate the module sensor.
-		...
-```
-
-## 2. Process with the Sensor module
-### A. The module sensor
-   * Function : 'list'  
-   'list' permits to list all usable configurations for operate with a specific sensor device.  
-   **_ex\._**:  
+##list
 
 ```javascript
-	var array_of_device_sensor = module_sensor.list();
-		...
+SensorDevice[] list()
 ```
- __NB__:
-   The function 'list' will return an array of class 'DeviceSensor' wich is the parent abstract class of each sensor device class.  
-   That class permit to implement for each device sensor three functions list below :  
-   \- get_name() : which is use for retrieve the friendly name of the configuration of a sensor device;  
-   \- get_type() : which serves to define a type for the sensor device; 
-   \- get_index() : finaly the index permits to identify the configuration number for the type of sensor device.  
 
-   * Function : 'get_sensor'  
-   'get_sensor' permits to retrieve a specifc sensor but return an upcast of the sensor device class.  
-   **_ex\._**:  
+**Description**
+
+Return an array containing all the sensor devices supported on the board.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+Array of *SensorDevice* objects.
+
+**Example**
 
 ```javascript
-	var photolight_sensor = module_sensor.get_sensor(0, a5.ARTIK_A5_SENSORS.DEVICE.LIGHT); // Get the 1st type of sensor light.
-	// or
-	var photolight_sensor = module_sensor.get_sensor(4, a5.ARTIK_A5_SENSORS.DEVICE.LIGHT); // Get the 4th.
-		...
+var list = sensors.list();
+list.forEach(function(sensor){
+	console.log('Name: ' + sensor.get_name());
+});
 ```
-__NB__:
-   The returned object should be downcast for using its sensor device features.   
 
-   * Function : 'get_accelerometer_sensor'  
-   'get_accelerometer_sensor' permits to create a new native object for operate with an accelerometer sensor device.  
-   **_ex\._**:  
+##get_sensor
 
 ```javascript
-	var accelerometer_sensor = module_sensor.get_accelerometer_sensor(0);
-		...
+SensorDevice get_sensor(Number index, Number type)
 ```
 
-   * Function : 'get_flame_sensor'  
-   'get_flame_sensor' creates a new native object for operate with a flame sensor device.  
-   **_ex\._**:  
+**Description**
+
+Return a specific sensor based on its type and index.
+
+**Parameters**
+
+ - *Number*: index of the sensor to get among one given type of sensors. e.g. If only one humidity sensor is available on the board, index should be 0.
+ - *Number*: type of the sensor to get, among the ones defined under [sensor types](#sensor-types).
+
+**Return value**
+
+*SensorDevice* object.
+
+**Example**
 
 ```javascript
-	var flame_sensor = module_sensor.get_flame_sensor(0);
-		...
+var temperature = sensors.get_sensor(0, 4);
 ```
 
-   * Function : 'get_humidity_sensor'  
-   'get_humidity_sensor' permits to create a new native object for operate with an humidity sensor device.   
-   **_ex\._**:  
+##get_accelerometer_sensor
 
 ```javascript
-	var humid_sensor = module_sensor.get_humidity_sensor(0);
-		...
+AccelerometerSensor get_accelerometer_sensor(Number index)
 ```
 
-   * Function : 'get_light_sensor'  
-   'get_light_sensor' creates a new native object for operate with a light sensor device.  
-   **_ex\._**:  
+**Description**
+
+Return an accelerometer sensor based on its index.
+
+**Parameters**
+
+ - *Number*: index of the sensor to get among all the available accelerometer sensors. If only one accelerometer sensor is available on the board, index should be 0.
+
+**Return value**
+
+*AccelerometerSensor* object.
+
+**Example**
 
 ```javascript
-	var photoresistor_light_sensor = module_sensor.get_light_sensor(0);
-		...
+var accelerometer = sensors.get_accelerometer_sensor(0);
 ```
 
-   * Function : 'get_proximity_sensor'  
-   'get_proximity_sensor' permits to create a new native object for operate with a proximity sensor device.  
-   **_ex\._**:  
+##get_humidity_sensor
 
 ```javascript
-	var proximity_sensor = module_sensor.get_proximity_sensor(0);
-		...
+HumiditySensor get_humidity_sensor(Number index)
 ```
 
-   * Function : 'get_temperature_sensor'  
-   'get_temperature_sensor' permits to create a new native object for operate with a temperature sensor device.  
-   **_ex\._**:  
+**Description**
+
+Return a humidity sensor based on its index.
+
+**Parameters**
+
+ - *Number*: index of the sensor to get among all the available humidity sensors. If only one humidity sensor is available on the board, index should be 0.
+
+**Return value**
+
+*HumiditySensor* object.
+
+**Example**
 
 ```javascript
-	var environment_temperature_sensor = module_sensor.get_temperature_sensor(0);
-		...
-
+var humidity = sensors.get_humidity_sensor(0);
 ```
 
-### B. All supported sensors  
-#### 0. The abstract class sensor  
-   * Function : 'get_type'  
-   'get_type' retrieves the type of the sensor device.  
-   **_ex\._**:  
+##get_light_sensor
 
 ```javascript
-	var photolight_sensor = module_sensor.get_sensor(4, a5.ARTIK_A5_SENSORS.DEVICE.LIGHT);
-	logout.log("Get a device of type "+photolight_sensor.get_type());
-		...
-
+LightSensor get_light_sensor(Number index)
 ```
 
-   * Function : 'get_index'  
-   'get_index' serves to identify the configuration number for the type of the sensor device.   
-   **_ex\._**:  
+**Description**
+
+Return a light sensor based on its index.
+
+**Parameters**
+
+ - *Number*: index of the sensor to get among all the available light sensors. If only one light sensor is available on the board, index should be 0.
+
+**Return value**
+
+*LightSensor* object.
+
+**Example**
 
 ```javascript
-	var photolight_sensor = module_sensor.get_sensor(4, a5.ARTIK_A5_SENSORS.DEVICE.LIGHT);
-	logout.log("Get the n°"+photolight_sensor.get_index()+" of light sensor configurations.");
-		...
+var light = sensors.get_light_sensor(0);
 ```
 
-   * Function : 'get_name'  
-   'get_index' gets the friendly name of the configuration of the sensor device;  
-   **_ex\._**:  
+##get_temperature_sensor
 
 ```javascript
-	var photolight_sensor = module_sensor.get_sensor(4, a5.ARTIK_A5_SENSORS.DEVICE.LIGHT);
-	logout.log("The sensor light is for : "+photolight_sensor.get_name()+" tracking...");
-		...
+TemperatureSensor get_temperature_sensor(Number index)
 ```
 
-#### 1. The Accelerometer sensor  
-   * Function : 'get_type'  
-   See parent class definition.  
+**Description**
 
-   * Function : 'get_index'  
-   See parent class definition.  
+Return a temperature sensor based on its index.
 
-   * Function : 'get_name'  
-   See parent class definition.  
+**Parameters**
 
-   * Function : 'get_speed_x'  
-   'get_speed_x' gets the value of the axis X.  
-   **_ex\._**:  
+ - *Number*: index of the sensor to get among all the available temperature sensors. If only one temperature sensor is available on the board, index should be 0.
+
+**Return value**
+
+*TemperatureSensor* object.
+
+**Example**
 
 ```javascript
-	console.log("x = "+accelerometer_sensor.get_speed_x());
-		...
+var temperature = sensors.get_temperature_sensor(0);
 ```
 
-   * Function : 'get_speed_y'  
-   'get_speed_y' gets the value of the axis Y.  
-   **_ex\._**:  
+##get_proximity_sensor
 
 ```javascript
-	console.log("y = "+accelerometer_sensor.get_speed_y());
-		...
+ProximitySensor get_proximity_sensor(Number index)
 ```
 
-   * Function : 'get_speed_z'  
-   'get_speed_z' gets the value of the axis Z.  
-   **_ex\._**:  
+**Description**
+
+Return a proximity sensor based on its index.
+
+**Parameters**
+
+ - *Number*: index of the sensor to get among all the available proximity sensors. If only one proximity sensor is available on the board, index should be 0.
+
+**Return value**
+
+*ProximitySensor* object.
+
+**Example**
 
 ```javascript
-	console.log("z = "+accelerometer_sensor.get_speed_z());
-		...
+var proximity = sensors.get_proximity_sensor(0);
 ```
 
-#### 2. The Flame sensor  
-   * Function : 'get_type'  
-   See parent class definition.  
-
-   * Function : 'get_index'  
-   See parent class definition.  
-
-   * Function : 'get_name'  
-   See parent class definition.  
-
-   * Function : 'get_signals'  
-   'get_signals' gets the flame presence value (0 or 1).  
-   **_ex\._**:  
+##get_flame_sensor
 
 ```javascript
-	console.log("there is a flame ?  "+flame_sensor.get_signals());
-		...
+FlameSensor get_flame_sensor(Number index)
 ```
 
-#### 3. The Humidity sensor
-   * Function : 'get_type'    
-   See parent class definition.  
+**Description**
 
-   * Function : 'get_index'  
-   See parent class definition.  
+Return a flame sensor based on its index.
 
-   * Function : 'get_name'  
-   See parent class definition.  
+**Parameters**
 
-   * Function : 'get_humidity'  
-   'get_humidity' process the percent value of humidity.  
-   **_ex\._**:  
+ - *Number*: index of the sensor to get among all the available flame sensors. If only one flame sensor is available on the board, index should be 0.
+
+**Return value**
+
+*FlameSensor* object.
+
+**Example**
 
 ```javascript
-	console.log(humid_sensor.get_humidity()+"% of humidity");
-		...
+var flame = sensors.get_flame_sensor(0);
 ```
 
-#### 4. The Light sensor  
-   * Function : 'get_type'  
-   See parent class definition.  
-
-   * Function : 'get_index'  
-   See parent class definition.  
-
-   * Function : 'get_name'  
-   See parent class definition.  
-
-   * Function : 'get_intensity'  
-   'get_intensity' process the percent value of brightness.   
-   **_ex\._**:  
+#SensorDevice API
+##get_type
 
 ```javascript
-	console.log(photolight_sensor.get_intensity()+"% of light");
-		...
+Number get_type()
 ```
 
-#### 5. The Proximity sensor
-   * Function : 'get_type'  
-   See parent class definition.  
+**Description**
 
-   * Function : 'get_index'  
-   See parent class definition.  
+Return the type of the current sensor object.
 
-   * Function : 'get_name'  
-   See parent class definition.  
+**Parameters**
 
-   * Function : 'get_presence'  
-   'get_presence' gets the presence value (0 or 1).  
-   **_ex\._**:  
+None.
+
+**Return value**
+
+*Number*: type of the sensor, among the ones defined under [sensor types](#sensor-types).
+
+**Example**
+
+See [full example](#full-example).
+
+##get_index
 
 ```javascript
-	console.log("there is an obstacle ?  "+proximity_sensor.get_presence());
-		...
+Number get_index()
 ```
 
-#### 6. The Temperature sensor
-   * Function : 'get_type'  
-   See parent class definition.  
+**Description**
 
-   * Function : 'get_index'  
-   See parent class definition.  
+Return the index of the current sensor object.
 
-   * Function : 'get_name'  
-   See parent class definition.  
+**Parameters**
 
-   * Function : 'get_celcius'  
-   'get_celcius' process the temperature value in celicus.  
-   **_ex\._**:  
+None.
+
+**Return value**
+
+*Number*: index of the sensor among the list of sensors of the same type.
+
+**Example**
+
+See [full example](#full-example).
+
+##get_name
 
 ```javascript
-	console.log(environment_temperature_sensor.get_celcius()+"C° of temperature");
-		...
+String get_name()
 ```
 
-   * Function : 'get_fahrenheit'  
-   'get_fahrenheit' process the temperature value in fahrenheit.  
-   **_ex\._**:  
+**Description**
+
+Return the name of the current sensor object.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: name of the sensor.
+
+**Example**
+
+See [full example](#full-example).
+
+#AccelerometerSensor API
+##get_speed_x
 
 ```javascript
-	console.log(environment_temperature_sensor.get_fahrenheit()+"F° of temperature");
-		...
+Number get_speed_x()
 ```
 
-## 3. Full example
+**Description**
 
-   * See [the test file](/test/sensor-test.js)
+Return the acceleration along the X axis.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: acceleration along the X axis.
+
+**Example**
+
+See [full example](#full-example).
+
+##get_speed_y
+
+```javascript
+Number get_speed_y()
+```
+
+**Description**
+
+Return the acceleration along the Y axis.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: acceleration along the Y axis.
+
+**Example**
+
+See [full example](#full-example).
+
+##get_speed_z
+
+```javascript
+Number get_speed_z()
+```
+
+**Description**
+
+Return the acceleration along the Z axis.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: acceleration along the Z axis.
+
+**Example**
+
+See [full example](#full-example).
+
+#HumiditySensor API
+##get_humidity
+
+```javascript
+Number get_humidity()
+```
+
+**Description**
+
+Return the measured humidity level.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: measured humidity level.
+
+**Example**
+
+See [full example](#full-example).
+
+#LightSensor API
+##get_intensity
+
+```javascript
+Number get_intensity()
+```
+
+**Description**
+
+Return the measured light intensity.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: measured light intensity.
+
+**Example**
+
+See [full example](#full-example).
+
+#TemperatureSensor API
+##get_celcius
+
+```javascript
+Number get_celcius()
+```
+
+**Description**
+
+Return the measured temperature in celsius degrees.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: measured temperature in celsius degrees.
+
+**Example**
+
+See [full example](#full-example).
+
+##get_fahrenheit
+
+```javascript
+Number get_fahrenheit()
+```
+
+**Description**
+
+Return the measured temperature in Fahrenheit degrees.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: measured temperature in Fahrenheit degrees.
+
+**Example**
+
+See [full example](#full-example).
+
+#ProximitySensor API
+##get_presence
+
+```javascript
+Number get_presence()
+```
+
+**Description**
+
+Return the presence status of a nearby obstacle.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: **1** if an obstacle is detected nearby the sensor, **0** otherwise.
+
+**Example**
+
+See [full example](#full-example).
+
+#FlameSensor API
+##get_signals
+
+```javascript
+Number get_signals()
+```
+
+**Description**
+
+Return the status of flame detection.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: **1** if a flame is detected, **0** otherwise.
+
+**Example**
+
+See [full example](#full-example).
+
+#Full example
+
+   * See [sensor-test.js](/test/sensor-test.js)

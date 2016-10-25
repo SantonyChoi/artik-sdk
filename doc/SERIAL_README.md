@@ -1,221 +1,505 @@
-# Module Serial
-   > This README permits to introduce each API functions of the module Serial.
+#Serial API
 
-## 1. Initialize & clean an usage with the module Serial
-   * Include the headers  
-   First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.  
-   **_ex\._**:  
+##Baudrates
 
-```javascript
-	const artik = require('../lib/artik-sdk'); // Instantiate the main module object for accessing to the Artik SDK.  
-	const name = artik.get_platform_name(); // Get the platform name.  
+| Baudrate | Value |
+|:---------|:-----:|
+| 4800     | 0     |
+| 9600     | 1     |
+| 14400    | 2     |
+| 19200    | 3     |
+| 38400    | 4     |
+| 57600    | 5     |
+| 115200   | 6     |
 
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
-        }
-		...
-```
- __NB__:  
-   After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.    
-   
-   * Instantiate the module  
-   From the main module we can call the module Serial constructor.  
-   **_ex\._**:  
+##Parity
 
-```javascript
-	var serial = artik.serial(a5.ARTIK_A5_SERIAL.SCOM.XSCOM2,
-				  "serial-loopback",
-				  a5.ARTIK_A5_SERIAL.BAUD.B115200,
-				  a5.ARTIK_A5_SERIAL.PARITY.NONE,
-				  a5.ARTIK_A5_SERIAL.DATA.BIT8,
-				  a5.ARTIK_A5_SERIAL.STOP.BIT1,
-				  a5.ARTIK_A5_SERIAL.FLOWCTRL.NONE);
+| Parity | Value |
+|:-------|:-----:|
+| None   | 0     |
+| Odd    | 1     |
+| Even   | 2     |
 
-```
- __NB__:  
-   \- The first parameter is the serial port number;  
-   \- The second is the friendly name;  
-   \- The third is the frequency;  
-   \- The fourth is the parity mode;  
-   \- The fifth is the word size;  
-   \- The sixth parameter is the ;  
-   \- The last one is the address of the chip.  
+##Data bits
 
-   * Function : 'request'  
-   'request' permits to request the module Serial with the given configuration, return an error if it's fail.  
-   **_ex\._**:  
+| Data bits | Value |
+|:----------|:-----:|
+| 7         | 0     |
+| 8         | 1     |
+
+##Stop bits
+
+| Stop bits | Value |
+|:----------|:-----:|
+| 1         | 0     |
+| 2         | 1     |
+
+##Flow control
+
+| Parity   | Value |
+|:---------|:-----:|
+| None     | 0     |
+| RTS/CTS  | 1     |
+| XON/XOFF | 2     |
+
+##Constructor
 
 ```javascript
-	serial.request();
-		...
+var uart = new serial(Number port, String name, Number baudrate, Number parity, Number data_bits, Number stop_bits, Number flow_control);
 ```
 
-   * Function : 'release'  
-   'release' serves to free the ressources owned by the object module Serial.  
-   **_ex\._**:  
+**Description**
+
+Create and configure a new instance of a serial port.
+
+**Parameters**
+
+ - *Number*: ID of the serial port to target. This value is defined in the board-specific definition files.
+ - *String*: friendly name to give to this serial instance.
+ - *Number*: baudrate among the ones defined under [Baudrates](#baudrates)
+ - *Number*: parity parameter among the ones defined under [Parity](#parity)
+ - *Number*: number of data bits among the ones defined under [Data bits](#data-bits)
+ - *Number*: number of stop bits among the ones defined under [Stop bits](#stop-bits)
+ - *Number*: flow control type among the ones defined under [Flow control](#flow-control)
+
+**Return value**
+
+New instance.
+
+**Example**
 
 ```javascript
-	serial.release();
-		...
+var uart = new serial(1, 'tty1', 6, 0, 1, 0, 0);
 ```
 
-## 2. Process with the Serial module
-   * Function : 'write'  
-   'write' permits to write to the 'tx' port.  
-   **_ex\._**:  
+##request
 
 ```javascript
-	serial.write("send a packet");
-		...
+Number request()
 ```
-   * Function : 'get_port_num'   
-   'get_port_num' permits to retrieve the serial port number of the module.  
-   **_ex\._**:  
+
+**Description**
+
+Request the serial port tied to the serial instance. If this one has
+already been requested by some other program, the function will return
+an error. When the calling program is no longer using the serial port, it should release it by calling the *release* function.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: Error code.
+
+**Example**
+
+See [Full example](#full-example)
+
+##release
 
 ```javascript
-	serial.get_port_num();
-		...
+Number release()
 ```
 
-   * Function : 'get_name'  
-   'get_name' permits to retrieve the friendly name of the module.  
-   **_ex\._**:  
+**Description**
+
+Release a serial port after being previously reserved by the *request*
+function.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
+
+See [Full example](#full-example)
+
+##write
 
 ```javascript
-	serial.get_name();
-		...
+Number write(Buffer data)
 ```
 
-   * Function : 'get_baudrate'  
-   'get_baudrate' permits to retrieve the frequency set of the module.  
-   **_ex\._**:  
+**Description**
+
+Write data over the serial port.
+
+**Parameters**
+
+ - *Buffer*: buffer containing the data to send over the serial port.
+
+**Return value**
+
+*Number*: Error code
+
+**Example**
 
 ```javascript
-	serial.get_baudrate();
-		...
+uart.write(new Buffer([0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff], 'hex'));
 ```
 
-   * Function : 'get_parity'  
-   'get_parity' permits to retrieve the parity set of the module.  
-   **_ex\._**:  
+##get_port_num
 
 ```javascript
-	serial.get_parity();
-		...
+Number get_port_num()
 ```
 
-   * Function : 'get_data'  
-   'get_data' permits to retrieve the word size of the module.  
-   **_ex\._**:  
+**Description**
+
+Return the port number of the serial instance.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: port number.
+
+**Example**
 
 ```javascript
-	serial.get_data();
-		...
+console.log('Port number: ' + uart.get_port_num());
 ```
 
-   * Function : 'get_stop'  
-   'get_stop' permits to retrieve the bit stop set of the module.  
-   **_ex\._**:  
+##set_port_num
 
 ```javascript
-	serial.get_stop();
-		...
+set_port_num(Number port)
 ```
 
-   * Function : 'get_flowctrl'  
-   'get_flowctrl' permits to retrieve the flow control mode set of the module.  
-   **_ex\._**:  
+**Description**
+
+Set the port number of the serial instance.
+
+**Parameters**
+
+ - *Number*: port number.
+
+**Return value**
+
+None.
+
+**Example**
 
 ```javascript
-	serial.get_flowctrl();
-		...
+uart.set_port_num(1);
 ```
 
-   * Function : 'set_port_num'  
-   'set_port_num' permits to set the serial port number of the module.  
-   **_ex\._**:  
+##get_name
 
 ```javascript
-	serial.set_port_num();
-		...
+String get_name()
 ```
 
-   * Function : 'set_name'  
-   'set_name' permits to set the friendly name of the module.  
-   **_ex\._**:  
+**Description**
+
+Return the friendly name of the serial instance.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*String*: friendly name.
+
+**Example**
 
 ```javascript
-	serial.set_name();
-		...
+console.log('Name: ' + uart.get_name());
 ```
 
-   * Function : 'set_baudrate'  
-   'set_baudrate' permits to set the frequency of the module.  
-   **_ex\._**:  
+##set_name
 
 ```javascript
-	serial.set_baudrate();
-		...
+set_name(String name)
 ```
 
-   * Function : 'set_parity'  
-   'set_parity' permits to set the bit parity of the module.  
-   **_ex\._**:  
+**Description**
+
+Set the friendly name of the serial instance.
+
+**Parameters**
+
+ - *String*: firendly name.
+
+**Return value**
+
+None.
+
+**Example**
 
 ```javascript
-	serial.set_parity();
-		...
+uart.set_name('tty2');
 ```
 
-   * Function : 'set_data'  
-   'set_data' permits to set the word size of the module.  
-   **_ex\._**:  
+##get_baudrate
 
 ```javascript
-	serial.set_data();
-		...
+Number get_baudrate()
 ```
 
-   * Function : 'set_stop'  
-   'set_stop' permits to set the stop bit of the module.  
-   **_ex\._**:  
+**Description**
+
+Return the baudrate of the serial instance.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: baudrate value among the ones defined under [Baudrates](#baudrates).
+
+**Example**
 
 ```javascript
-	serial.set_stop();
-		...
+console.log('Baudrate: ' + uart.get_baudrate());
 ```
 
-   * Function : 'set_flowctrl'  
-   'set_flowctrl' permits to set the flow control mode of the module.  
-   **_ex\._**:  
+##set_baudrate
 
 ```javascript
-	serial.set_flowctrl();
-		...
+set_baudrate(Number baudrate)
 ```
 
+**Description**
 
-   * Function : 'on'  
-   'on' permits to store a callback associates to an event.  
-   **_ex\._**:  
+Set the baudrate of the serial instance.
+
+**Parameters**
+
+ - *Number*: baudrate value among the ones defined under [Baudrates](#baudrates).
+
+**Return value**
+
+None.
+
+**Example**
 
 ```javascript
-	serial.on('read', function(message) {
-        console.log("received: " + message);
-});
-
-		...
+uart.set_baudrate(6);
 ```
 
+##get_parity
 
-## 3. Full example
+```javascript
+Number get_parity()
+```
 
-   * See [the test file](/test/serial-test.js)
+**Description**
+
+Return the parity of the serial instance.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: parity value among the ones defined under [Parity](#parity).
+
+**Example**
+
+```javascript
+console.log('Parity: ' + uart.get_parity());
+```
+
+##set_parity
+
+```javascript
+set_parity(Number parity)
+```
+
+**Description**
+
+Set the parity of the serial instance.
+
+**Parameters**
+
+ - *Number*: baudrate value among the ones defined under [[Parity](#parity).
+
+**Return value**
+
+None.
+
+**Example**
+
+```javascript
+uart.set_parity(0);
+```
+
+##get_data
+
+```javascript
+Number get_data()
+```
+
+**Description**
+
+Return the number of data bits of the serial instance.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: data bits value among the ones defined under [Data bits](#data-bits).
+
+**Example**
+
+```javascript
+console.log('Data bits: ' + uart.get_data());
+```
+
+##set_data
+
+```javascript
+set_data(Number data_bits)
+```
+
+**Description**
+
+Set the number of data bits of the serial instance.
+
+**Parameters**
+
+ - *Number*: data bits value among the ones defined under [Data bits](#data-bits).
+
+**Return value**
+
+None.
+
+**Example**
+
+```javascript
+uart.set_data(0);
+```
+
+##get_stop
+
+```javascript
+Number get_stop()
+```
+
+**Description**
+
+Return the number of stop bits of the serial instance.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: stop bits value among the ones defined under [Stop bits](#stop-bits).
+
+**Example**
+
+```javascript
+console.log('Stop bits: ' + uart.get_stop());
+```
+
+##set_stop
+
+```javascript
+set_stop(Number stop_bits)
+```
+
+**Description**
+
+Set the number of stop bits of the serial instance.
+
+**Parameters**
+
+ - *Number*: stop bits value among the ones defined under [Stop bits](#stop-bits).
+ - 
+**Return value**
+
+None.
+
+**Example**
+
+```javascript
+uart.set_stop(0);
+```
+
+##get_flowctrl
+
+```javascript
+Number get_flowctrl()
+```
+
+**Description**
+
+Return the flow control configuration of the serial instance.
+
+**Parameters**
+
+None.
+
+**Return value**
+
+*Number*: flow control value among the ones defined under [Flow control](#flow-control).
+
+**Example**
+
+```javascript
+console.log('Flow control: ' + uart.get_flowctrl());
+```
+
+##set_flowctrl
+
+```javascript
+set_flowctrl(Number stop_bits)
+```
+
+**Description**
+
+Set the flow control configuration of the serial instance.
+
+**Parameters**
+
+ - *Number*: flow control value among the ones defined under [Flow control](#flow-control).
+
+**Return value**
+
+None.
+
+**Example**
+
+```javascript
+uart.set_flowctrl(1);
+```
+
+#Events
+
+##read
+
+```javascript
+serial.on('read', function(String))
+```
+
+**Description**
+
+Called every time data is received on the serial port.
+
+**Parameters**
+
+ - *String*: string containing the data that was received on the serial port.
+
+**Example**
+
+See [full example](#full-example)
+
+
+#Full example
+
+   * See [serial-test.js](/test/serial-test.js)

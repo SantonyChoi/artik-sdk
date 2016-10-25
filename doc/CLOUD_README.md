@@ -1,164 +1,538 @@
-# Module Cloud
-   > This README permits to introduce each API functions of the module Cloud.  
+#Cloud API
 
-## 1. Initialize & clean an usage with the module Cloud
-   * Include the headers  
-   First of all, we should include the main module of the Artik SDK and its depedencies wich depend on the Artik board version.  
-   **_ex\._**:  
+##Constructor
 
 ```javascript
-	const artik = require('../lib/artik-sdk'); // Instantiate the main module object for accessing to the Artik SDK.  
-	const name = artik.get_platform_name(); // Get the platform name.  
+var cl = new cloud(String token);
+```
 
-        if (name == 'Artik 520') { // Check for a A520 board
-                const a5 = require('../src/platform/artik520'); // If 'yes', thee
-n instantiate the platform depedencies.
-        } else if (name == 'Artik 1020') { // Check for a A1020 board
-                const a10 = require('../src/platform/artik1020'); // If 'yes', tt
-hen instantiate the platform depedencies.
-        } else if (name == 'Artik 71O') { // Check for a A710 board
-                const a7 = require('../src/platform/artik710'); // If 'yes', thee
-e
-n instantiate the platform depedencies.
+**Description**
+
+Create a new instance of the cloud API with a specific authorization token
+needed to make requests to the ARTIK Cloud API.
+
+**Parameters**
+
+ - *String*: authorization token
+
+**Return value**
+
+New instance.
+
+**Example**
+
+```javascript
+var cl = new cloud('<authorization token>');
+```
+
+##send_message
+
+```javascript
+String send_message(String device_id, String message, function(String response))
+```
+
+**Description**
+
+Send a message to ARTIK cloud from a specific device ID.
+
+**Parameters**
+
+ - *String*: ID of the device sending the message.
+ - *String*: message to send in JSON formatted string.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+var msg = '{ "data": { "state": true } }';
+send_message('<device ID>', msg, function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##send_action
+
+```javascript
+String send_action(String device_id, String action, function(String response))
+```
+
+**Description**
+
+Send an action to ARTIK cloud targeted to a specific device ID.
+
+**Parameters**
+
+ - *String*: ID of the destination device to send the action to.
+ - *String*: action to send in JSON formatted string.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+var seton = '{ "actions": [{ "name": "setOn", "parameters": {} }]}';
+send_action('<device ID>', seton, function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##get_current_user_profile
+
+```javascript
+String get_current_user_profile(function(String response))
+```
+
+**Description**
+
+Get the current user profile, based on the authorization token.
+
+**Parameters**
+
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+get_current_user_profile(function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##get_user_devices
+
+```javascript
+String get_user_devices(Number count, Boolean properties, Number offset, String user_id, function(String response))
+```
+
+**Description**
+
+Get the list of devices belonging to a specific user.
+
+**Parameters**
+
+ - *Number*: maximum count of devices to return.
+ - *Boolean*: if *true*, return device properties as well.
+ - *Number*: offset in the devices list from which to start, used for pagination.
+ - *String*: user ID corresponding to the owner of the devices to list.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+get_user_devices(10, false, 0, '<user ID>', function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##get_user_device_types
+
+```javascript
+String get_user_device_types(Number count, Boolean shared, Number offset, String user_id, function(String response))
+```
+
+**Description**
+
+Get the list of device types available to a specific user.
+
+**Parameters**
+
+ - *Number*: maximum count of device types to return.
+ - *Boolean*: if *true*, return device types shared by all users as well.
+ - *Number*: offset in the device types list from which to start, used for pagination.
+ - *String*: user ID corresponding to the owner of the device types to list.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+get_user_device_types(10, false, 0, '<user ID>', function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##get_user_application_properties
+
+```javascript
+String get_user_application_properties(String user_id, String app_id, function(String response))
+```
+
+**Description**
+
+Get properties stored by a user for a specific application.
+
+**Parameters**
+
+ - *String*: user ID whose application properties are to be returned.
+ - *String*: application ID whose properties are to be returned.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+get_user_application_properties('<user ID>', '<app ID>', function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##get_device
+
+```javascript
+String get_device(String device_id, Boolean properties, function(String response))
+```
+
+**Description**
+
+Get information related to a specific device.
+
+**Parameters**
+
+ - *String*: device ID whose information is to be returned.
+ - *Boolean*: if *true*, return the device properties as well.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+get_device('<device ID>', true, function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##get_device_token
+
+```javascript
+String get_device_token(String device_id, function(String response))
+```
+
+**Description**
+
+Get authorization token associated to a specific device.
+
+**Parameters**
+
+ - *String*: device ID whose token is to be returned.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+get_device_token('<device ID>', function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##add_device
+
+```javascript
+String add_device(String user_id, String device_type_id, String name, function(String response))
+```
+
+**Description**
+
+Add a new device to a specific user.
+
+**Parameters**
+
+ - *String*: user ID to associate the new device to.
+ - *String*: device type ID of the new device to create.
+ - *String*: friendly name to give to the new device.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+add_device('<user ID>', '<device type ID>', 'Heartrate sensor', function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##delete_device
+
+```javascript
+String delete_device(String user_id, String device_type_id, String name, function(String response))
+```
+
+**Description**
+
+Delete a specific device from the authorized user account.
+
+**Parameters**
+
+ - *String*: device ID of the device to delete.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+delete_device('<device ID>', function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##update_device_token
+
+```javascript
+String update_device_token(String device_id, function(String response))
+```
+
+**Description**
+
+Update the authorization token of a specific device.
+
+**Parameters**
+
+ - *String*: device ID whose token is to be refreshed.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+update_device_token('<device ID>', function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##delete_device_token
+
+```javascript
+String delete_device_token(String device_id, function(String response))
+```
+
+**Description**
+
+Delete the authorization token of a specific device.
+
+**Parameters**
+
+ - *String*: device ID whose token is to be deleted.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+```javascript
+delete_device_token('<device ID>', function(response){
+	console.log('Response: ' + response);
+});
+```
+
+##sdr_start_registration
+
+```javascript
+String sdr_start_registration(String device_type_id, String vendor_id, function(String response))
+```
+
+**Description**
+
+Start Secure Device Registration process.
+
+**Parameters**
+
+ - *String*: device type ID of the device to register.
+ - *String*: vendor specific ID of the device to register.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+See [Secure Device Registration example](#secure-device-registration-example)
+
+##sdr_registration_status
+
+```javascript
+String sdr_registration_status(String registration_id, function(String response))
+```
+
+**Description**
+
+Get current status of the Secure Device Registration process.
+
+**Parameters**
+
+ - *String*: registration ID returned by the *sdr_start_registration* function.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+See [Secure Device Registration example](#secure-device-registration-example)
+
+##sdr_complete_registration
+
+```javascript
+String sdr_complete_registration(String registration_id, String nonce, function(String response))
+```
+
+**Description**
+
+Complete the Secure Device Registration process after the user has entered
+the PIN into ARTIK Cloud portal. Should be called only after registration status
+is set to **PENDING_DEVICE_COMPLETION**.
+
+**Parameters**
+
+ - *String*: registration ID returned by the *sdr_start_registration* function.
+ - *String*: registration nonce returned by the *sdr_start_registration* function.
+ - *function(String)*: optional callback function that will be called after
+performing the request asynchronously. Response from the cloud is passed as a
+parameter to the callback in a JSON formatted string. If no function is provided
+the request will be performed synchronously.
+
+**Return value**
+
+*Undefined* if the callback function is provided, a JSON formatted *String* 
+containing the response from the cloud otherwise (synchronous call).
+
+**Example**
+
+See [Secure Device Registration example](#secure-device-registration-example)
+
+#Full example
+
+##Secure Device Registration example
+
+Full SDR procedure is documented [here](https://developer.artik.cloud/documentation/advanced-features/secure-your-devices.html)
+
+```javascript
+var artik = require('artik-sdk');
+var sleep = require('sleep');
+var cloud = new artik.cloud('<fill up with user authorization token>');
+var dtid = '<fill up with device type ID>';
+var vid = '<fill up with vendor id>';
+var regId = '';
+var regNonce = '';
+
+function getRegistrationStatus(response) {
+        var regStatus = JSON.parse(response).data.status;
+        if (regStatus == "PENDING_USER_CONFIRMATION") {
+                sleep.sleep(1);
+                cloud.sdr_registration_status(regId, getRegistrationStatus);
+        } else if (regStatus == "PENDING_DEVICE_COMPLETION") {
+                cloud.sdr_complete_registration(regId, regNonce, function(response) {
+                        console.log('Response: ' + response);
+                        process.exit(0);
+                });
         }
-		...
-```
- __NB__:  
-   After this step you should always call the main module object and use its dependencies for retrieve or operate with the modules of the Artik SDK.   
-   
-   * Instantiate the module  
-   From the main module we can call the module Cloud constructor.    
-   **_ex\._**:  
+}
 
-```javascript
-	var auth_token = ''	
-	var cloud = artik.cloud(auth_token);
-		...
-```
- __NB__:  
-   The parameter serves to store the authentification token.  
+cloud.sdr_start_registration(dtid, vid, function(response) {
+        var json = JSON.parse(response);
+        regId = json.data.rid;
+        regNonce = json.data.nonce;
 
-## 2. Process with the module Cloud  
-   * Function : 'send_message'  
-   'send_message' permits to send a message to a specific device stored in the cloud.  
-   **_ex\._**:  
+        console.log('Enter pin ' + json.data.pin + ' in the ARTIK Cloud portal');
 
-```javascript
-	cloud.send_message(device_id, message, function(response) {
-		console.log("Send message - response: " + response);
-	})
-		...
+        cloud.sdr_registration_status(regId, getRegistrationStatus);
+});
 ```
 
-   * Function : 'send_action'  
-   'send_action' send an action command to a specific device stored in the cloud.  
-   **_ex\._**:  
-
-```javascript
-	cloud.send_action(device_id, action, function(response) {
-		console.log("Send action - response: " + response);
-	});
-		...
-```
-
-   * Function : 'get_current_user_profile'  
-   'get_current_user_profile' allows to retrieve the current user profile.    
-   **_ex\._**:  
-
-```javascript
-	cloud.get_current_user_profile(function(response) {
-		console.log("Get Current User Profile - response: " + response);
-	});
-		...
-```
-
-   * Function : 'get_user_devices'  
-   'get_user_devices' list all devices owned by the user.  
-   **_ex\._**:  
-
-```javascript
-	cloud.get_user_devices(100, false, 0, user_id, function(response) {
-		console.log("Get user devices without properties - response: " + response);
-	});
-		...
-```
- __NB__:  
-   \- First parameter is the maximum size list of devices;  
-   \- The second parameter serves to inform if we should transfer the properties;  
-   \- The third is the offset within the list.  
-
-   * Function : 'get_user_device_types'  
-   'get_user_device_types' list all types devices owned by the user.  
-   **_ex\._**:  
-
-```javascript
-	cloud.get_user_device_types(100, false, 0, user_id, function(response) {
-		console.log("Get User Device Types - response: " + response);
-	});
-		...
-```
- __NB__:  
-   \- First parameter is the maximum size list of types devices;  
-   \- The second parameter serves to inform if we should transfer the properties;  
-   \- The third is the offset within the remote list.  
-
-   * Function : 'get_device'  
-   'get_device' retrieves a specific device.  
-   **_ex\._**:  
-
-```javascript
-	cloud.get_device(device_id, false, function(response) {
-		console.log("Get Device without properties - response: " + response);
-	});
-		...
-```
- __NB__:  
-   The second parameter enable the device properties transfer.  
-
-   * Function : 'get_device_token'  
-   'get_device_token' retrieves the token of a specific device.  
-   **_ex\._**:  
-
-```javascript
-	cloud.get_device_token(device_id, function(response) {
-		console.log("Get Device Token - response: " + response);
-	});
-		...
-```
-
-   * Function : 'update_device_token'  
-   'update_device_token' retrieves a specific device for update its token.  
-   **_ex\._**:  
-
-```javascript
-	cloud.update_device_token(device_id, function(response) {
-		console.log("Update Device Token - response: " + response);
-	});
-		...
-```
-
-   * Function : 'delete_device_token'  
-   'delete_device_token' retrieves a specific device for delete its token.  
-   **_ex\._**:  
-
-```javascript
-	cloud.delete_device_token(device_id, function(response) {
-		console.log("Delete Device Token - response: " + response);
-	});
-		...
-```
-
-   * Function : 'delete_device'  
-   'delete_device' retrieves a specific device for delete it.  
-   **_ex\._**:  
-
-```javascript
-	cloud.delete_device(device_id, function(response) {
-		console.log("Delete Device - response: " + response);
-	});
-		...
-```
-
-## 3. Full example
-
-   * See [the test file](/test/cloud-test.js)
+##Other example
+   * See [cloud-test.js](/test/cloud-test.js)
