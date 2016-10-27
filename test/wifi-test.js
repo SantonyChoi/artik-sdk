@@ -4,23 +4,28 @@ var ssid = '<enter a SSID here>';
 var pwd = '<passphrase of the SSID>';
 
 wifi.on('started', function() {
-	console.log('onstarted');
-	console.log(wifi.get_scan_result());
-
 	wifi.scan_request();
 });
 
 wifi.on('connected', function() {
-	console.log('on connect');
+	console.log('connected');
+	process.exit(0);
 });
 
 wifi.on('scan', function(list) {
-	console.log('onscan');
-	console.log(list);
-	wifi.disconnect();
-	wifi.connect(ssid, pwd, true);
+	var results = JSON.parse(list);
+	console.log(results);
+	var ap = results.filter(function(item) {
+		return item.name == ssid;
+	});
+
+	if (ap.length > 0) {
+		console.log('Found SSID ' + ssid + ', connecting...');
+		wifi.disconnect();
+		wifi.connect(ssid, pwd, false);
+	}
 });
 
 process.on('SIGINT', function () {
-    process.exit(0);
+	process.exit(0);
 });
