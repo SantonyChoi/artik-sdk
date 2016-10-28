@@ -86,7 +86,7 @@ zb.on('event', function(data) {
 			else
 				console.log(result[1].network_type);
 		}
-		if(response_type == 'ZIGBEE_RESPONSE_ONOFF_INFO'){
+		if(response_type == 'ZIGBEE_RESPONSE_ONOFF_COMMAND'){
 			console.log("ZIGBEE ONOFF endpoint [%d] command [%d]: [%d] -> [%d]",
 									result[1].endpoint_id, result[1].command,
 									result[1].prev_value, result[1].curr_value);

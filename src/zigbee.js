@@ -14,43 +14,43 @@ util.inherits(Zigbee, events.EventEmitter);
 
 module.exports = Zigbee;
 
-Zigbee.ON_OFF_SWITCH = 0x0000;
-Zigbee.LEVEL_CONTROL_SWITCH = 0x0001;
-Zigbee.ON_OFF_LIGHT = 0x0100;
-Zigbee.DIMMABLE_LIGHT = 0x0101;
+Zigbee.prototype.ON_OFF_SWITCH = 0x0000;
+Zigbee.prototype.LEVEL_CONTROL_SWITCH = 0x0001;
+Zigbee.prototype.ON_OFF_LIGHT = 0x0100;
+Zigbee.prototype.DIMMABLE_LIGHT = 0x0101;
 
-Zigbee.ZCL_ON_OFF_CLUSTER_ID = 0x0006;
+Zigbee.prototype.ZCL_ON_OFF_CLUSTER_ID = 0x0006;
 
-Zigbee.ZIGBEE_ONOFF_OFF = 3220;
-Zigbee.ZIGBEE_ONOFF_ON =3221;
-Zigbee.ZIGBEE_ONOFF_TOGGLE =3222;
+Zigbee.prototype.ZIGBEE_ONOFF_OFF = 3220;
+Zigbee.prototype.ZIGBEE_ONOFF_ON =3221;
+Zigbee.prototype.ZIGBEE_ONOFF_TOGGLE =3222;
 
 /* TX_POWER */
-Zigbee.ZIGBEE_TX_POWER_8 = 8;
-Zigbee.ZIGBEE_TX_POWER_7 = 7;
-Zigbee.ZIGBEE_TX_POWER_6 = 6;
-Zigbee.ZIGBEE_TX_POWER_5 = 5;
-Zigbee.ZIGBEE_TX_POWER_4 = 4;
-Zigbee.ZIGBEE_TX_POWER_3 = 3;
-Zigbee.ZIGBEE_TX_POWER_2 = 2;
-Zigbee.ZIGBEE_TX_POWER_1 = 1;
-Zigbee.ZIGBEE_TX_POWER_0 = 0;
-Zigbee.ZIGBEE_TX_POWER_MINUS1 = -1;
-Zigbee.ZIGBEE_TX_POWER_MINUS2 = -2;
-Zigbee.ZIGBEE_TX_POWER_MINUS3 = -3;
-Zigbee.ZIGBEE_TX_POWER_MINUS4 = -4;
-Zigbee.ZIGBEE_TX_POWER_MINUS5 = -5;
-Zigbee.ZIGBEE_TX_POWER_MINUS6 = -6;
-Zigbee.ZIGBEE_TX_POWER_MINUS7 = -7;
-Zigbee.ZIGBEE_TX_POWER_MINUS8 = -8;
-Zigbee.ZIGBEE_TX_POWER_MINUS9 = -9;
-Zigbee.ZIGBEE_TX_POWER_MINUS11 = -11;
-Zigbee.ZIGBEE_TX_POWER_MINUS12 = -12;
-Zigbee.ZIGBEE_TX_POWER_MINUS14 = -14;
-Zigbee.ZIGBEE_TX_POWER_MINUS17 = -17;
-Zigbee.ZIGBEE_TX_POWER_MINUS20 = -20;
-Zigbee.ZIGBEE_TX_POWER_MINUS26 = -26;
-Zigbee.ZIGBEE_TX_POWER_MINUS43 = -43;
+Zigbee.prototype.ZIGBEE_TX_POWER_8 = 8;
+Zigbee.prototype.ZIGBEE_TX_POWER_7 = 7;
+Zigbee.prototype.ZIGBEE_TX_POWER_6 = 6;
+Zigbee.prototype.ZIGBEE_TX_POWER_5 = 5;
+Zigbee.prototype.ZIGBEE_TX_POWER_4 = 4;
+Zigbee.prototype.ZIGBEE_TX_POWER_3 = 3;
+Zigbee.prototype.ZIGBEE_TX_POWER_2 = 2;
+Zigbee.prototype.ZIGBEE_TX_POWER_1 = 1;
+Zigbee.prototype.ZIGBEE_TX_POWER_0 = 0;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS1 = -1;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS2 = -2;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS3 = -3;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS4 = -4;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS5 = -5;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS6 = -6;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS7 = -7;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS8 = -8;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS9 = -9;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS11 = -11;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS12 = -12;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS14 = -14;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS17 = -17;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS20 = -20;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS26 = -26;
+Zigbee.prototype.ZIGBEE_TX_POWER_MINUS43 = -43;
 
 Zigbee.prototype.initialize = function(devices) {
 	var _ = this;
@@ -105,5 +105,3 @@ Zigbee.prototype.onoff_command = function(endpoint, onoff_value) {
 Zigbee.prototype.onoff_get_value = function(endpoint_id) {
 	return this.zb.onoff_get_value(endpoint_id);
 };
-
-
