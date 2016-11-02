@@ -2,6 +2,8 @@ const artik = require('../lib/artik-sdk');
 
 var network = artik.network();
 
-network.get_current_ip(function(response) {
-	console.log("MY IP Address : " + response);
+console.log("Your IP is " + network.get_current_ip());
+
+network.get_online_status(function(response) {
+	console.log("Status : " + JSON.parse(response).online_status);
 });

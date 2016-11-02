@@ -1,6 +1,6 @@
 {
   "name": "artik-sdk",
-  "version": "0.9.0",
+  "version": "1.0.1",
   "description": "SDK for developing applications for Samsung's ARTIK platform",
   "main" : "src/index.js",
   "scripts": {
@@ -23,7 +23,8 @@
       "WEBSOCKET",
       "ZIGBEE",
       "WIFI",
-      "BLUETOOTH"
+      "BLUETOOTH",
+      "LWM2M"
   ],
   "author": "Gregory Lemercier <g.lemercier@ssi.samsung.com>",
   "license": "MIT",
@@ -37,10 +38,13 @@
     "lib/artik-sdk.node",
     "src/platform/artik520.js",
     "src/platform/artik1020.js",
+    "src/platform/artik710.js",
     "src/gpio.js",
     "src/bluetooth.js",
     "src/wifi.js",
     "src/zigbee.js",
+    "src/websocket.js",
+    "src/serial.js",
     "test/gpio-test.js",
     "test/i2c-test.js",
     "test/serial-test.js",
@@ -56,6 +60,7 @@
     "test/sensor-test.js",
     "test/network-test.js",
     "test/websocket-test.js",
-    "test/zigbee-test.js"
+    "test/zigbee-test.js",
+    "test/lwm2m-test.js"
   ]
 }

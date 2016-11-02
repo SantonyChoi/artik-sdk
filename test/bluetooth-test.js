@@ -1,6 +1,6 @@
-var bt = require('../src/bluetooth').Bluetooth;
+var bt = new (require('../src/bluetooth'))();
 
-var remote_addr = "A4:E4:B8:6C:38:B9";
+var remote_addr = "<BT device address";
 
 function findDevice(item) {
 	return item.address == remote_addr;

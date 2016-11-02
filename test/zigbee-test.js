@@ -1,7 +1,7 @@
 const readline = require('readline');
 const rl = readline.createInterface(process.stdin, process.stdout);
 
-var zb = require('../src/zigbee').Zigbee;
+var zb = new (require('../src/zigbee'))();
 var join_duration = 0x3C; //60 sec
 var zb_device_type = []; //get zigbee type
 var input_lenght = process.argv.length;

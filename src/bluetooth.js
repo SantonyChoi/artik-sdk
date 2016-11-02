@@ -1,10 +1,10 @@
 var events = require('events');
 var util = require('util');
-var bt = require('../lib/artik-sdk').bluetooth();
+var bluetooth = require('../lib/artik-sdk').bluetooth;
 
 var Bluetooth = function(){
 	events.EventEmitter.call(this);
-	
+	this.bt = new bluetooth();
 	setImmediate(function(self) {
 		self.emit('started');
 	}, this);
@@ -12,62 +12,65 @@ var Bluetooth = function(){
 
 util.inherits(Bluetooth, events.EventEmitter);
 
-exports.Bluetooth = new Bluetooth();
+module.exports = Bluetooth;
 
-exports.Bluetooth.start_scan = function() {
-	return bt.start_scan(function(device) {
-		exports.Bluetooth.emit('scan', device);
+Bluetooth.prototype.start_scan = function() {
+	var _ = this;
+	return this.bt.start_scan(function(device) {
+		_.emit('scan', device);
 	});
 };
 
-exports.Bluetooth.stop_scan = function() {
-	return bt.stop_scan();
+Bluetooth.prototype.stop_scan = function() {
+	return this.bt.stop_scan();
 };
 
-exports.Bluetooth.get_devices = function() {
-	return bt.get_devices();
+Bluetooth.prototype.get_devices = function() {
+	return this.bt.get_devices();
 };
 
-exports.Bluetooth.get_paired_devices = function() {
-	return bt.get_paired_devices();
+Bluetooth.prototype.get_paired_devices = function() {
+	return this.bt.get_paired_devices();
 };
 
-exports.Bluetooth.get_connected_devices = function() {
-	return bt.get_connected_devices();
+Bluetooth.prototype.get_connected_devices = function() {
+	return this.bt.get_connected_devices();
 };
 
-exports.Bluetooth.start_bond = function(addr) {
-	return bt.start_bond(addr, function(status) {
-		exports.Bluetooth.emit('bond', status);
+Bluetooth.prototype.start_bond = function(addr) {
+	var _ = this;
+	return this.bt.start_bond(addr, function(status) {
+		_.emit('bond', status);
 	});
 };
 
-exports.Bluetooth.stop_bond = function(addr) {
-	return bt.stop_bond(addr);
+Bluetooth.prototype.stop_bond = function(addr) {
+	return this.bt.stop_bond(addr);
 };
 
-exports.Bluetooth.connect = function(addr) {
-	return bt.connect(addr, function(status) {
-		exports.Bluetooth.emit('connect', status);
+Bluetooth.prototype.connect = function(addr) {
+	var _ = this;
+	return this.bt.connect(addr, function(status) {
+		_.emit('connect', status);
 	});
 };
 
-exports.Bluetooth.disconnect = function(addr) {
-	return bt.disconnect(addr);
+Bluetooth.prototype.disconnect = function(addr) {
+	return this.bt.disconnect(addr);
 };
 
-exports.Bluetooth.remove_unpaired_devices = function() {
-	return bt.remove_unpaired_devices();
+Bluetooth.prototype.remove_unpaired_devices = function() {
+	return this.bt.remove_unpaired_devices();
 };
 
-exports.Bluetooth.remove_device = function(addr) {
-	return bt.remove_device(addr);
+Bluetooth.prototype.remove_device = function(addr) {
+	return this.bt.remove_device(addr);
 };
 
-exports.Bluetooth.pxp_set_linkloss_level = function(addr, level) {
-	return bt.pxp_set_linkloss_level(addr, level);
+Bluetooth.prototype.pxp_set_linkloss_level = function(addr, level) {
+	return this.bt.pxp_set_linkloss_level(addr, level);
 };
 
-exports.Bluetooth.pxp_set_immediate_level = function(addr, level) {
-	return bt.pxp_set_immediate_level(addr, level);
+Bluetooth.prototype.pxp_set_immediate_level = function(addr, level) {
+	return this.bt.pxp_set_immediate_level(addr, level);
 };

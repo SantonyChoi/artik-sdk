@@ -1,10 +1,10 @@
 var events = require('events');
 var util = require('util');
-var wifi = require('../lib/artik-sdk').wifi();
+var wifi = require('../lib/artik-sdk').wifi;
 
 var Wifi = function(){
 	events.EventEmitter.call(this);
-
+	this.wifi = new wifi();
 	setImmediate(function(self) {
 		self.emit('started');
 	}, this);
@@ -12,24 +12,26 @@ var Wifi = function(){
 
 util.inherits(Wifi, events.EventEmitter);
 
-exports.Wifi = new Wifi();
+module.exports = Wifi;
 
-exports.Wifi.scan_request = function() {
-	return wifi.scan_request(function(list) {
-		exports.Wifi.emit('scan', list);
+Wifi.prototype.scan_request = function() {
+	var _ = this;
+	return this.wifi.scan_request(function(list) {
+		_.emit('scan', list);
 	});
 };
 
-exports.Wifi.connect = function(ssid, password, is_persistent) {
-	return wifi.connect(ssid, password, is_persistent, function() {
-		exports.Wifi.emit('connect');
+Wifi.prototype.connect = function(ssid, password, is_persistent) {
+	var _ = this;
+	return this.wifi.connect(ssid, password, is_persistent, function() {
+		_.emit('connected');
 	});
 };
 
-exports.Wifi.disconnect = function() {
-	return wifi.disconnect();
+Wifi.prototype.disconnect = function() {
+	return this.wifi.disconnect();
 };
 
-exports.Wifi.get_scan_result = function() {
-	return wifi.get_scan_result();
+Wifi.prototype.get_scan_result = function() {
+	return this.wifi.get_scan_result();
 };

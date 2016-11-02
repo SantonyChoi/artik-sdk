@@ -6,7 +6,6 @@ module.exports.artik1020 = require('./platform/artik1020');
 var artik = require('../lib/artik-sdk');
 module.exports.adc = artik.adc;
 module.exports.cloud = artik.cloud;
-module.exports.gpio = artik.gpio;
 module.exports.http = artik.http;
 module.exports.i2c = artik.i2c; 
 module.exports.media = artik.media;
@@ -18,7 +17,11 @@ module.exports.spi = artik.spi;
 module.exports.time = artik.time;
 
 /* Other exports */
-module.exports.bluetooth = require('./bluetooth').Bluetooth;
-module.exports.wifi = require('./wifi').Wifi;
-module.exports.zigbee = require('./zigbee').Zigbee;
-
+module.exports.bluetooth = require('./bluetooth');
+module.exports.wifi = require('./wifi');
+module.exports.zigbee = require('./zigbee');
+module.exports.gpio = require('./gpio');
+module.exports.serial = require('./serial');
+module.exports.websocket = require('./websocket');
+module.exports.lwm2m = require('./lwm2m');
+module.exports.mqtt = require('./mqtt');

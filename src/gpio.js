@@ -4,7 +4,7 @@ var gpio = require('../lib/artik-sdk').gpio;
 
 var Gpio = function(id, label, dir, type, edge, val) {
 	events.EventEmitter.call(this);
-	this.gpio = gpio(id, label, dir, type, edge, val);
+	this.gpio = new gpio(id, label, dir, type, edge, val);
 }
 
 util.inherits(Gpio, events.EventEmitter);

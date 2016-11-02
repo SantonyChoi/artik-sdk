@@ -63,7 +63,7 @@ exports.ARTIK_A5_PWM = { 'PWMIO' : { 'XPWMIO1' : 0,
 		       };
 
 /* SPI definition */
-exports.ARTIK_A10_SPI = { 'BUS' : { 'BUS0' : 0,
+exports.ARTIK_A5_SPI = { 'BUS' : { 'BUS0' : 0,
 								   'BUS1' : 1,
 								   'BUS2' : 2,
 								   'BUS3' : 3 },
@@ -77,7 +77,6 @@ exports.ARTIK_A10_SPI = { 'BUS' : { 'BUS0' : 0,
 					   };
 
 /* TIME definition */
-
 exports.ARTIK_A5_TIME = { 'ZONE' : { 'UTC' : 0,
 				     'GMT1' : 1,
 				     'GMT2' : 2,
@@ -95,7 +94,6 @@ exports.ARTIK_A5_TIME = { 'ZONE' : { 'UTC' : 0,
 		       };
 
 /* SENSOR definition */
-
 exports.ARTIK_A5_SENSOR = { 'DEVICE' : { 'ACCELEROMETER' : 1,
 					 'HUMIDITY' : 4,
 					 'LIGHT' : 8,

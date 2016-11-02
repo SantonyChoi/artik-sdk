@@ -1,4 +1,4 @@
-var wifi = require('../src/wifi').Wifi;
+var wifi = new (require('../src/wifi'))();
 
 var ssid = '<enter a SSID here>';
 var pwd = '<passphrase of the SSID>';
@@ -6,12 +6,12 @@ var pwd = '<passphrase of the SSID>';
 wifi.on('started', function() {
 	console.log('onstarted');
 	console.log(wifi.get_scan_result());
-	
+
 	wifi.scan_request();
 });
 
-wifi.on('connect', function() {
-	console.log('onconnect');
+wifi.on('connected', function() {
+	console.log('on connect');
 });
 
 wifi.on('scan', function(list) {

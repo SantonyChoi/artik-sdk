@@ -1,5 +1,4 @@
 const artik = require('../lib/artik-sdk');
-const artik_platform = require('./artik_platform');
 
 var adc = artik.adc(0, "adcjs-test");
 

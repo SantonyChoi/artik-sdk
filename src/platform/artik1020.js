@@ -76,7 +76,6 @@ exports.ARTIK_A10_SPI = { 'BUS' : { 'BUS0' : 0,
 			  			};
 
 /* TIME definition */
-
 exports.ARTIK_A10_TIME = { 'ZONE' : { 'UTC' : 0,
 				     'GMT1' : 1,
 				     'GMT2' : 2,
@@ -94,7 +93,6 @@ exports.ARTIK_A10_TIME = { 'ZONE' : { 'UTC' : 0,
 		       };
 
 /* SENSOR definition */
-
 exports.ARTIK_A10_SENSOR = { 'DEVICE' : { 'ACCELEROMETER' : 1,
 					 'HUMIDITY' : 4,
 					 'LIGHT' : 8,
