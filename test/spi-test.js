@@ -35,11 +35,10 @@ if (spi.request()) {
 
 	console.log('Starting Loopback Test...Make sure you have connected MOSI and MISO with a wire');
 	var tx_buf = new Buffer([0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9] , 'hex');
-	var rx_buf = new Buffer([0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0],  'hex');
 
 	/* Transfer Data */
 	console.log("Sending " + tx_buf.length + " bytes on the spi bus");
-	rx_buf = spi.read_write(tx_buf, tx_buf.length);
+	var rx_buf = spi.read_write(tx_buf);
 
 	/* Compare the received data */
 	if (tx_buf.equals(rx_buf))
