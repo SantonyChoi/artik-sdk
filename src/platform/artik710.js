@@ -41,7 +41,7 @@ exports.ARTIK_A710_PWM = { 'PWMIO' : { 'XPWMIO0' : 2 },
 		       };
 
 /* SPI definition */
-exports.ARTIK_A710_SPI = { 'BUS' : { 'BUS0' : 0 },
+exports.ARTIK_A710_SPI = { 'BUS' : { 'BUS0' : 2 },
 			   'CS'  : { 'CS0' : 0,
 				     'CS1' : 1 },
 			   'MODE' : { 'MODE0' : 0,
