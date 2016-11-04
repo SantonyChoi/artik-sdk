@@ -28,7 +28,7 @@
   ],
   "author": "Gregory Lemercier <g.lemercier@ssi.samsung.com>",
   "license": "MIT",
-  "homepage": "www.artik.io",
+  "homepage": "http://www.artik.io",
   "repository": {
       "type": "git",
       "url": "git://github.com/artik-iot/artik-sdk.git"
