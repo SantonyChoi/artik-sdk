@@ -19,6 +19,7 @@ var headers = [
 ];
 var body = "name=samsung&project=artik";
 
+var allow_disable_wifi = process.env.ALLOW_DISABLE_WIFI;
 
 /* Test Case Module */
 testCase('HTTP', function() {
@@ -97,24 +98,35 @@ testCase('HTTP', function() {
 			});
 
 		});
+	});
+
+	testCase('#get() - network down', function(done) {
+	        pre(function() {
+			if (allow_disable_wifi == 1) {
+				console.log("Disabling Wifi");
+				exec("ifconfig wlan0 down");	
+			}
+
+		});
 
 		assertions('HTTP Get - Should return valid response if the network is down', function(done) {
-
-			this.timeout(10000);
-
-			console.log("Disabling Wifi");
-			exec("ifconfig wlan0 down");
+			console.log(allow_disable_wifi);
+			if (allow_disable_wifi == 0)
+				this.skip();
 
 			http.get("https://httpbin.org/get", headers, function(response, status) {
 				console.log("GET - status " + status + " - response: " + response);
-				assert.equal(status, 200);
-				exec("ifconfig wlan0 up; sleep 1; pkill dhclient; sleep 1; dhclient wlan0");
+				assert.equal(status, 0);
 				done();
 			});
 
 		});
 
+		post(function() {
+			if (allow_disable_wifi == 1) {
+				this.timeout(15000);
+				exec("ifconfig wlan0 up; sleep 1; pkill dhclient; sleep 1; dhclient wlan0");
+			}
+		});
 	});
-
-
 });
