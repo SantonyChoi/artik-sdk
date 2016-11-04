@@ -154,22 +154,8 @@ testCase('Cloud', function() {
 
 			if (!auth_token || !device_id  || !action || !auth_token.length || !device_id.length || !action.length)
 				this.skip();
-
 			assert.notInclude(cloud.send_action(device_id, action), "error");
 			done();
-
-		});
-
-		assertions('Send Actions to a device via Cloud - Calllback', function(done) {
-
-			if (!auth_token || !device_id  || !action || !auth_token.length || !device_id.length || !action.length)
-				this.skip();
-
-			cloud.get_send_action(device_id,action, function(response) {
-				console.log(response);
-				assert.notInclude(response, "error");
-				done();
-			});
 		});
 
 	});
@@ -186,19 +172,6 @@ testCase('Cloud', function() {
 			done();
 
 		});
-
-		assertions('Send Messages to Cloud from Device - Calllback', function(done) {
-
-			if (!auth_token || !device_id  || !message || !auth_token.length || !device_id.length || !message.length)
-				this.skip();
-
-			cloud.get_send_message(device_id, message, function(response) {
-				console.log(response);
-				assert.notInclude(response, "error");
-				done();
-			});
-		});
-
 	});
 
 	testCase('#delete_device_token()', function() {
