@@ -72,11 +72,11 @@ testCase('Serial', function() {
 			this.timeout(5000);
 
 			console.log('Starting Loopback Test...Make sure you have connected the Tx and Rx of the Serial Port with a wire');
-			var tx_buf = new Buffer([0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff], 'hex');
+			var tx_buf = new Buffer('aabbccddeeff');
 
 			/* Transfer Data */
 			loopback.on('read', function(data) {
-				var rx_buf = new Buffer(data, 'hex');
+				var rx_buf = new Buffer(data);
 				assert.equal(tx_buf.length, rx_buf.length);
 				assert.equal(tx_buf.equals(rx_buf), true);
 				done();

@@ -45,13 +45,13 @@ if(name == 'Artik 520') {
 				a530.ARTIK_A530_SERIAL.FLOWCTRL.NONE);
 }
 
-var buf = new Buffer([0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff], 'hex');
+var buf = new Buffer('aabbccddeeff');
 
 loopback.request();
 
 loopback.on('read', function(data) {
     if (data)
-	console.log("Rx Data: " + Buffer(data).toString('hex'));
+	console.log("Rx Data: " + data);
 });
 
 var written = loopback.write(buf);
