@@ -69,7 +69,7 @@ testCase('SPI', function() {
 			console.log("Sending " + tx_buf.length + " bytes on the spi bus");
 			rx_buf = spi.read_write(tx_buf, tx_buf.length);
 			console.log("Received " + rx_buf.length + " bytes on the spi bus");
-			assert.equal(tx_buf, rx_buf);
+			assert.equal(tx_buf.equals(rx_buf), true);
 		});
 
 	});
