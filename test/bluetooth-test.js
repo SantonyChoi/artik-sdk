@@ -48,7 +48,7 @@ testCase('Bluetooth', function() {
 				console.log('scanned');
 				assert.isNotNull(device);
 				device = JSON.parse(device);
-				if (device.address == remote_addr) {
+				if (device[0].address.toUpperCase() == remote_addr.toUpperCase()) {
 					console.log("Remote device found");
 					bt.stop_scan();
 					done();
