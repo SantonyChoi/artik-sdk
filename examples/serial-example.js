@@ -33,6 +33,16 @@ if(name == 'Artik 520') {
 				a7.ARTIK_A710_SERIAL.DATA.BIT8,
 				a7.ARTIK_A710_SERIAL.STOP.BIT1,
 				a7.ARTIK_A710_SERIAL.FLOWCTRL.NONE);
+} else if(name == 'Artik 530') {
+	console.log("Running SERIAL test on Artik 530");
+	const a530 = require('../src/platform/artik530');
+	var loopback = new artik_serial(a530.ARTIK_A530_SERIAL.UART.UART4,
+				"serial-loopback",
+				a530.ARTIK_A530_SERIAL.BAUD.B115200,
+				a530.ARTIK_A530_SERIAL.PARITY.NONE,
+				a530.ARTIK_A530_SERIAL.DATA.BIT8,
+				a530.ARTIK_A530_SERIAL.STOP.BIT1,
+				a530.ARTIK_A530_SERIAL.FLOWCTRL.NONE);
 }
 
 var buf = new Buffer([0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff], 'hex');

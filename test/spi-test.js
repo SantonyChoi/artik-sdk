@@ -44,6 +44,14 @@ testCase('SPI', function() {
 								a7.ARTIK_A710_SPI.MODE.MODE0,
 								a7.ARTIK_A710_SPI.BITS.BITS8,
 								500000);
+		} else if(name == 'Artik 530') {
+			console.log('Running SPI test on Artik 530');
+			const a530 = require('../src/platform/artik530.js');
+			spi = artik.spi(a530.ARTIK_A530_SPI.BUS.BUS2,
+								a530.ARTIK_A530_SPI.CS.CS0,
+								a530.ARTIK_A530_SPI.MODE.MODE0,
+								a530.ARTIK_A530_SPI.BITS.BITS8,
+								500000);
 		}
 
 		spi.request();

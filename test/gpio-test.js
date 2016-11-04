@@ -43,6 +43,13 @@ testCase('GPIO', function() {
 			green    = new gpio(a7.ARTIK_A710_GPIO_GPIO1, 'green', 'out', 'digital', 'none', 0);
 			blue     = new gpio(a7.ARTIK_A710_GPIO_GPIO2, 'blue', 'out', 'digital', 'none', 0);
 			button   = new gpio(a7.ARTIK_A710_GPIO_GPIO4, 'button', 'in' , 'digital', 'both', 0);
+		} else if(name == 'Artik 530') {
+			console.log('Running GPIO test on Artik 530');
+			const a530 = require('../src/platform/artik530');
+			red      = new gpio(a530.ARTIK_A530_GPIO_GPIO0, 'red', 'out', 'digital', 'none', 0);
+			green    = new gpio(a530.ARTIK_A530_GPIO_GPIO1, 'green', 'out', 'digital', 'none', 0);
+			blue     = new gpio(a530.ARTIK_A530_GPIO_GPIO2, 'blue', 'out', 'digital', 'none', 0);
+			button   = new gpio(a530.ARTIK_A530_GPIO_GPIO4, 'button', 'in' , 'digital', 'both', 0);
 		}
 
 		red.request();
@@ -84,6 +91,7 @@ testCase('GPIO', function() {
                 console.log("Button state: " + val);
                 done();
             });
+	    button.request();
 
         });
 
